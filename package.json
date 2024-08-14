@@ -1,5 +1,5 @@
 {
-  "name": "myApp",
+  "name": "wabakicashregister",
   "private": true,
   "version": "0.0.1",
   "type": "module",
@@ -12,10 +12,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@capacitor/android": "6.1.2",
     "@capacitor/app": "6.0.1",
-    "@capacitor/core": "6.1.2",
+    "@capacitor/core": "^6.1.2",
     "@capacitor/haptics": "6.0.1",
-    "@capacitor/ios": "^6.1.2",
+    "@capacitor/ios": "6.1.2",
     "@capacitor/keyboard": "6.0.2",
     "@capacitor/status-bar": "6.0.1",
     "@ionic/react": "^8.0.0",
@@ -33,7 +34,7 @@
     "redux": "^5.0.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "6.1.2",
+    "@capacitor/cli": "^6.1.2",
     "@testing-library/dom": ">=7.21.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
