@@ -10,7 +10,7 @@ import {
 } from "@ionic/react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { EtatCommandeEnum, SelectedProducts } from "../../core/types";
+import { Commande, EtatCommandeEnum, SelectedProducts } from "../../core/types";
 import { generateUniqueId } from "../../core/utils";
 import { addCommande } from "../../services/commandService";
 import { RootState } from "../../store";
@@ -45,9 +45,11 @@ const BasketAction: React.FC = () => {
   };
 
   const handleNewCommand = async () => {
-    let body = {
+    let body: Commande = {
+      idCommande: generateUniqueId(),
       isoDateCommande: new Date().toISOString(),
       tableNumber: Math.round(Math.random()),
+      products: selectedProducts,
       productsIds: selectedProductIds,
       orderType: orderType,
       etat: EtatCommandeEnum.PENDING,
@@ -56,17 +58,14 @@ const BasketAction: React.FC = () => {
 
     console.log("body", body);
     setShowLoading(true);
-    const res = await addCommande({
-      ...body,
-      idCommande: generateUniqueId(),
-    });
+    const res = await addCommande(body);
     setShowLoading(false);
 
     console.log("res", res);
 
     if (res?.success) {
       setShowToast({ isOpen: true, message: "Commande ajoutée avec succès" });
-      router.push("/command/3");
+      router.push("/command/list");
     } else if (res.error) {
       setShowToast({ isOpen: true, message: `Erreur : ${res.error}` });
     } else {

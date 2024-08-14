@@ -53,7 +53,8 @@ import AddCommandStep1 from "./pages/AddCommand/CommandStep1";
 import store from "./store";
 import { Provider } from "react-redux";
 import AddCommandStep2 from "./pages/AddCommand/CommandStep2";
-import AddCommandStep3 from "./pages/AddCommand/CommandStep3";
+import CommandListPage from "./pages/CommandListPage";
+import CommandDetailPage from "./pages/CommandDetailPage";
 
 setupIonicReact();
 
@@ -84,8 +85,11 @@ const App: React.FC = () => (
                 <Route exact path="/command/2">
                   <AddCommandStep2 />
                 </Route>
-                <Route exact path="/command/3">
-                  <AddCommandStep3 />
+                <Route exact path="/command/list">
+                  <CommandListPage />
+                </Route>
+                <Route exact path="/command/list/:id">
+                  <CommandDetailPage />
                 </Route>
 
                 <Route exact path="/">

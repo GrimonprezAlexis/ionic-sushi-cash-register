@@ -41,7 +41,7 @@ const AddCommandStep2: React.FC = () => {
 
   useEffect(() => {
     updateCurrentProducts();
-    if (!orderType) router.push("/command/1");
+    if (!orderType) navigateToUrl("/command/1");
   }, [selectedProductIds]);
 
   const handleCategorySelect = (category: string) => {
@@ -91,17 +91,23 @@ const AddCommandStep2: React.FC = () => {
     );
   };
 
-  const navigateToStep = (step: number) => {
+  const navigateToUrl = (url: string) => {
+    router.push(url);
+  };
+
+  const navigateToCommandStep = (step: number) => {
     router.push(`/command/${step}`);
   };
 
   return (
     <IonPage>
       <IonBreadcrumbs>
-        <IonBreadcrumb onClick={() => navigateToStep(1)}>
+        <IonBreadcrumb onClick={() => navigateToCommandStep(1)}>
           Type de Commande
         </IonBreadcrumb>
-        <IonBreadcrumb onClick={() => navigateToStep(2)}>Panier</IonBreadcrumb>
+        <IonBreadcrumb onClick={() => navigateToCommandStep(2)}>
+          Panier
+        </IonBreadcrumb>
       </IonBreadcrumbs>
 
       <IonContent className="ion-padding">

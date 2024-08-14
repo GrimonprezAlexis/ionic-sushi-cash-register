@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
+  IonBreadcrumb,
+  IonBreadcrumbs,
   IonContent,
-  IonButton,
+  IonPage,
+  useIonRouter,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
-import CommandListItem from "../../components/CommandListItem";
-import { Commande } from "../../core/types";
-import { getCommandes } from "../../services/commandService";
+import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import CommandList from "../components/CommandList";
+import { Commande } from "../core/types";
+import { getCommandes } from "../services/commandService";
 
-const AddCommandStep3: React.FC = () => {
+const CommandListPage: React.FC = () => {
   const [commandes, setCommandes] = useState<Commande[]>([]);
+  const router = useIonRouter();
   const history = useHistory();
 
   useEffect(() => {
@@ -40,19 +40,23 @@ const AddCommandStep3: React.FC = () => {
   };
 
   const handleCommandSelect = (commande: Commande) => {
-    history.push(`/commandes/${commande.idCommande}`);
+    history.push(`/command/list/${commande.idCommande}`);
+  };
+
+  const navigateToUrl = (url: string) => {
+    router.push(url);
   };
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Liste des commandes</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <IonBreadcrumbs>
+        <IonBreadcrumb onClick={() => navigateToUrl("command/list")}>
+          Liste des commandes
+        </IonBreadcrumb>
+      </IonBreadcrumbs>
+
       <IonContent className="ion-padding">
-        <IonButton routerLink="/">Retourner à l'accueil</IonButton>
-        <CommandListItem
+        <CommandList
           commandes={commandes}
           onCommandSelect={handleCommandSelect}
         />
@@ -61,4 +65,4 @@ const AddCommandStep3: React.FC = () => {
   );
 };
 
-export default AddCommandStep3;
+export default CommandListPage;

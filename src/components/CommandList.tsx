@@ -10,13 +10,13 @@ import {
 } from "../assets/styled/styled-command-list";
 import { calculateElapsedTime, formatTime } from "../core/utils";
 
-interface CommandListItem {
+interface CommandList {
   commandes: Commande[];
   // selectedCommand: string;
   onCommandSelect: (commande: Commande) => void;
 }
 
-const CommandListItem: React.FC<CommandListItem> = ({
+const CommandList: React.FC<CommandList> = ({
   commandes,
   // selectedCommand,
   onCommandSelect,
@@ -41,6 +41,9 @@ const CommandListItem: React.FC<CommandListItem> = ({
             Commande ID: {commande.idCommande}
           </StyledCommandTitle> */}
           <StyledCommandDetail>
+            Total: {commande.totalPrice}€
+          </StyledCommandDetail>
+          <StyledCommandDetail>
             Date de commande: {formatTime(commande.isoDateCommande)}
           </StyledCommandDetail>
           <StyledCommandDetail>
@@ -64,4 +67,4 @@ const CommandListItem: React.FC<CommandListItem> = ({
   );
 };
 
-export default CommandListItem;
+export default CommandList;
