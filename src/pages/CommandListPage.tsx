@@ -1,10 +1,15 @@
 import {
   IonBreadcrumb,
   IonBreadcrumbs,
+  IonCol,
   IonContent,
+  IonGrid,
+  IonIcon,
   IonPage,
+  IonRow,
   useIonRouter,
 } from "@ionic/react";
+import { clipboardOutline } from "ionicons/icons";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import CommandList from "../components/CommandList";
@@ -43,19 +48,23 @@ const CommandListPage: React.FC = () => {
     history.push(`/command/list/${commande.idCommande}`);
   };
 
-  const navigateToUrl = (url: string) => {
-    router.push(url);
-  };
-
   return (
     <IonPage>
-      <IonBreadcrumbs>
-        <IonBreadcrumb onClick={() => navigateToUrl("command/list")}>
-          Liste des commandes
-        </IonBreadcrumb>
-      </IonBreadcrumbs>
+      <IonContent>
+        <IonGrid className="ion-padding">
+          <IonRow>
+            <IonCol>
+              <IonBreadcrumbs>
+                <IonBreadcrumb href="/command/list">
+                  Liste des commandes{" "}
+                  <IonIcon icon={clipboardOutline} slot="start" />
+                </IonBreadcrumb>
+                <IonBreadcrumb>{commandes.length} commandes</IonBreadcrumb>
+              </IonBreadcrumbs>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
 
-      <IonContent className="ion-padding">
         <CommandList
           commandes={commandes}
           onCommandSelect={handleCommandSelect}

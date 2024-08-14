@@ -1,69 +1,117 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { Commande } from "../core/types";
+import { Commande, EtatCommandeEnum } from "../core/types";
 import {
-  StyledCommandDetail,
-  StyledCommandListItem,
-  StyledCommandTableNumber,
-  StyledCommandType,
-  StyledWrapperCommandList,
-} from "../assets/styled/styled-command-list";
+  IonList,
+  IonItem,
+  IonLabel,
+  IonIcon,
+  IonText,
+  IonBadge,
+  IonAccordion,
+  IonAccordionGroup,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonNote,
+} from "@ionic/react";
+import {
+  timeOutline,
+  restaurantOutline,
+  walkOutline,
+  fastFoodOutline,
+  eyeOffOutline,
+  eyeSharp,
+} from "ionicons/icons";
 import { calculateElapsedTime, formatTime } from "../core/utils";
 
-interface CommandList {
+interface CommandListProps {
   commandes: Commande[];
-  // selectedCommand: string;
   onCommandSelect: (commande: Commande) => void;
 }
 
-const CommandList: React.FC<CommandList> = ({
+const CommandList: React.FC<CommandListProps> = ({
   commandes,
-  // selectedCommand,
   onCommandSelect,
 }) => {
   const [currentTime, setCurrentTime] = useState(dayjs());
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTime(dayjs());
-    }, 1000);
+    const timer = setInterval(() => setCurrentTime(dayjs()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  const getOrderTypeIcon = (type: string) => {
+    const icons = {
+      surplace: restaurantOutline,
+      aemporter: walkOutline,
+      livraison: fastFoodOutline,
+    };
+    return icons[type] || restaurantOutline;
+  };
+
   return (
-    <StyledWrapperCommandList>
+    <IonAccordionGroup>
       {commandes.map((commande) => (
-        <StyledCommandListItem
-          key={commande.idCommande}
-          onClick={() => onCommandSelect(commande)}
-        >
-          {/* <StyledCommandTitle>
-            Commande ID: {commande.idCommande}
-          </StyledCommandTitle> */}
-          <StyledCommandDetail>
-            Total: {commande.totalPrice}€
-          </StyledCommandDetail>
-          <StyledCommandDetail>
-            Date de commande: {formatTime(commande.isoDateCommande)}
-          </StyledCommandDetail>
-          <StyledCommandDetail>
-            Type de commande:{" "}
-            <StyledCommandType>{commande.orderType.type}</StyledCommandType>
-          </StyledCommandDetail>
-          <StyledCommandDetail>
-            Numéro de table:{" "}
-            <StyledCommandTableNumber>
-              {commande.tableNumber}
-            </StyledCommandTableNumber>
-          </StyledCommandDetail>
-          <StyledCommandDetail>État: {commande.etat}</StyledCommandDetail>
-          <StyledCommandDetail>
-            Temps écoulé depuis la commande:{" "}
-            {calculateElapsedTime(commande.isoDateCommande)}
-          </StyledCommandDetail>
-        </StyledCommandListItem>
+        <IonAccordion key={commande.idCommande}>
+          <IonItem slot="header" lines="full">
+            <IonGrid>
+              <IonRow className="ion-align-items-center">
+                <IonCol size="auto">
+                  <IonBadge
+                    color={
+                      commande.etat === EtatCommandeEnum.SERVIE
+                        ? "success"
+                        : "warning"
+                    }
+                  >
+                    {commande.etat}
+                  </IonBadge>
+                </IonCol>
+                <IonCol>
+                  <IonLabel>
+                    <h2>Commande #{commande.idCommande}</h2>
+                    <IonNote>{formatTime(commande.isoDateCommande)}</IonNote>
+                    <IonNote style={{ margin: 8 }}>-</IonNote>
+                    <IonNote color={"primary"}>{commande.totalPrice}€</IonNote>
+                  </IonLabel>
+                </IonCol>
+                <IonCol size="auto">
+                  <IonIcon icon={getOrderTypeIcon(commande.orderType.type)} />
+                </IonCol>
+                <IonCol size="auto" onClick={() => onCommandSelect(commande)}>
+                  <IonIcon icon={eyeSharp} />
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </IonItem>
+
+          <div className="ion-padding" slot="content">
+            <IonList lines="none">
+              <IonItem>
+                <IonLabel>Produits</IonLabel>
+                <IonText>
+                  {commande.products.map((product) => product.name).join(", ")}
+                </IonText>
+              </IonItem>
+              <IonItem>
+                <IonLabel>Temps écoulé</IonLabel>
+                <IonText>
+                  <IonIcon icon={timeOutline} slot="start" />
+                  {calculateElapsedTime(commande.isoDateCommande)}
+                </IonText>
+              </IonItem>
+              <IonItem>
+                <IonLabel>Numéro de Table</IonLabel>
+                <IonBadge color="primary">
+                  {commande.tableNumber || "N/A"}
+                </IonBadge>
+              </IonItem>
+            </IonList>
+          </div>
+        </IonAccordion>
       ))}
-    </StyledWrapperCommandList>
+    </IonAccordionGroup>
   );
 };
 

@@ -1,3 +1,4 @@
+import { MenuType } from "@ionic/core";
 import {
   IonAvatar,
   IonContent,
@@ -8,14 +9,19 @@ import {
   IonLabel,
   IonList,
   IonMenu,
-  IonRouterLink,
-  IonTitle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
-import { apps, construct, create, cube, fileTray, power } from "ionicons/icons";
+import {
+  clipboardOutline,
+  cubeOutline,
+  layersOutline,
+  logOutOutline,
+  restaurantOutline,
+  settingsOutline,
+  statsChartOutline,
+} from "ionicons/icons";
 import { useRef, useState } from "react";
-import { MenuType } from "@ionic/core";
 
 const MenuComponent: React.FC = () => {
   const [menuType, setMenuType] = useState<MenuType>("overlay");
@@ -57,46 +63,64 @@ const MenuComponent: React.FC = () => {
       <IonContent>
         <IonList>
           <IonItem button onClick={() => navigateTo("/command/1")}>
-            <IonIcon aria-hidden="true" icon={create} slot="start"></IonIcon>
+            <IonIcon
+              aria-hidden="true"
+              icon={restaurantOutline}
+              slot="start"
+            ></IonIcon>
             <IonLabel>Prendre une commande</IonLabel>
           </IonItem>
           <IonItem button onClick={() => navigateTo("/command/list")}>
-            <IonIcon aria-hidden="true" icon={apps} slot="start"></IonIcon>
-            <IonRouterLink routerLink="/command/list" color="default">
-              <IonLabel>Liste des commandes</IonLabel>
-            </IonRouterLink>
+            <IonIcon
+              aria-hidden="true"
+              icon={clipboardOutline}
+              slot="start"
+            ></IonIcon>
+            <IonLabel>Commandes</IonLabel>
           </IonItem>
           <IonItem button onClick={() => navigateTo("/catalogue")}>
-            <IonIcon aria-hidden="true" icon={cube} slot="start"></IonIcon>
-            <IonRouterLink routerLink="/catalog" color="default">
-              <IonLabel>Catalogue des produits</IonLabel>
-            </IonRouterLink>
+            <IonIcon
+              aria-hidden="true"
+              icon={cubeOutline}
+              slot="start"
+            ></IonIcon>
+            <IonLabel>Catalogue des produits</IonLabel>
           </IonItem>
-          <IonItem button onClick={() => navigateTo("/tab2")}>
-            <IonIcon aria-hidden="true" icon={fileTray} slot="start"></IonIcon>
-            <IonRouterLink routerLink="/tab3" color="default">
-              <IonLabel>Stock</IonLabel>
-            </IonRouterLink>
+          <IonItem button onClick={() => navigateTo("/stock")}>
+            <IonIcon
+              aria-hidden="true"
+              icon={layersOutline}
+              slot="start"
+            ></IonIcon>
+            <IonLabel>Gestion des stocks</IonLabel>
           </IonItem>
-          <IonItem button onClick={() => navigateTo("/tab2")}>
-            <IonIcon aria-hidden="true" icon={fileTray} slot="start"></IonIcon>
-            <IonRouterLink routerLink="/tab3" color="default">
-              <IonLabel>Statistiques des ventes</IonLabel>
-            </IonRouterLink>
+          <IonItem button onClick={() => navigateTo("/stats")}>
+            <IonIcon
+              aria-hidden="true"
+              icon={statsChartOutline}
+              slot="start"
+            ></IonIcon>
+            <IonLabel>Statistiques des ventes</IonLabel>
           </IonItem>
-
-          <IonItem button onClick={() => navigateTo("/tab3")}>
-            <IonIcon aria-hidden="true" icon={construct} slot="start"></IonIcon>
-            <IonRouterLink routerLink="/settings" color="default">
-              <IonLabel>Paramètres</IonLabel>
-            </IonRouterLink>
+          <IonItem button onClick={() => navigateTo("/settings")}>
+            <IonIcon
+              aria-hidden="true"
+              icon={settingsOutline}
+              slot="start"
+            ></IonIcon>
+            <IonLabel>Paramètres</IonLabel>
           </IonItem>
         </IonList>
       </IonContent>
 
       <IonFooter class="ion-text-center">
-        <IonItem color="medium" lines="none">
-          <IonIcon icon={power} style={{ marginRight: "8px" }} />
+        <IonItem
+          color="medium"
+          lines="none"
+          button
+          onClick={() => navigateTo("/logout")}
+        >
+          <IonIcon icon={logOutOutline} slot="start" />
           <IonLabel>Déconnexion</IonLabel>
         </IonItem>
       </IonFooter>

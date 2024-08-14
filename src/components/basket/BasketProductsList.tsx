@@ -1,18 +1,18 @@
+import {
+  IonAvatar,
+  IonCol,
+  IonGrid,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonRow,
+  IonText,
+} from "@ionic/react";
 import React from "react";
-import {
-  StyledDivider,
-  StyledListContainer,
-  StyledListItem,
-  StyledProductInfo,
-} from "../../assets/styled/styled-selected-product-list";
-import {
-  StyledProductName,
-  StyledProductPrice,
-} from "../../assets/styled/styled-product-list";
-import { setSelectedBasketItem } from "../../store/actions";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
 import { SelectedProducts } from "../../core/types";
+import { RootState } from "../../store";
+import { setSelectedBasketItem } from "../../store/actions";
 
 const BasketProductsList: React.FC = () => {
   const dispatch = useDispatch();
@@ -25,21 +25,38 @@ const BasketProductsList: React.FC = () => {
   };
 
   return (
-    <StyledListContainer>
+    <IonList>
       {selectedProducts.map((item: SelectedProducts) => (
-        <StyledListItem key={item?.id} onClick={() => onSelectBasketItem(item)}>
-          <StyledProductInfo>
-            <StyledProductName>
-              {item.name} (x{item.quantity})
-            </StyledProductName>
-            <StyledProductPrice>
-              {item.price * item.quantity}€
-            </StyledProductPrice>
-          </StyledProductInfo>
-          <StyledDivider />
-        </StyledListItem>
+        <IonItem key={item.id} onClick={() => onSelectBasketItem(item)} button>
+          <IonGrid>
+            <IonRow className="ion-align-items-center ion-no-padding">
+              <IonCol size="auto">
+                <IonAvatar style={{ width: "40px", height: "40px" }}>
+                  {/* Assuming you have an image associated with each product */}
+                  <img
+                    src={"https://ionicframework.com/docs/img/demos/avatar.svg"}
+                    alt={item.name}
+                  />
+                </IonAvatar>
+              </IonCol>
+              <IonCol>
+                <IonLabel>
+                  <h3 style={{ margin: 0 }}>{item.name}</h3>
+                  <IonText color="medium">Quantité: x{item.quantity}</IonText>
+                </IonLabel>
+              </IonCol>
+              <IonCol size="auto" className="ion-text-end">
+                <IonText color="primary">
+                  <h3 style={{ margin: 0 }}>
+                    {(item.price * item.quantity).toFixed(2)}€
+                  </h3>
+                </IonText>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </IonItem>
       ))}
-    </StyledListContainer>
+    </IonList>
   );
 };
 

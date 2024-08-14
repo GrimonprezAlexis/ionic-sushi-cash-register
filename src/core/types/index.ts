@@ -32,5 +32,6 @@ export interface OrderType {
 
 export enum EtatCommandeEnum {
   PENDING = "PENDING",
+  SERVIE = "SERVIE",
   VALIDER = "VALIDER",
 }

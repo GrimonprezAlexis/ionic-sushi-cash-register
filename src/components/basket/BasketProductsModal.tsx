@@ -17,7 +17,11 @@ import {
   IonModal,
   IonTitle,
   IonToolbar,
+  IonIcon,
+  IonButtons,
+  IonText,
 } from "@ionic/react";
+import { closeOutline, removeCircleOutline } from "ionicons/icons";
 
 interface SelectedProductsModalProps {
   isOpen: boolean;
@@ -63,7 +67,6 @@ const BasketProductsModal: React.FC<SelectedProductsModalProps> = ({
   };
 
   const handleLastItemRemove = () => {
-    // Remove the product entirely and close the modal
     const updatedProducts = selectedProducts.filter(
       (product: SelectedProducts) => product.id !== basketItemSelected.id
     );
@@ -80,25 +83,34 @@ const BasketProductsModal: React.FC<SelectedProductsModalProps> = ({
       <IonHeader>
         <IonToolbar>
           <IonTitle>{basketItemSelected.name}</IonTitle>
-          <IonButton slot="end" onClick={onClose}>
-            ×
-          </IonButton>
+          <IonButtons slot="end">
+            <IonButton onClick={onClose}>
+              <IonIcon icon={closeOutline} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonList>
           {expandedProductList.map((item, index) => (
-            <IonItem key={index}>
-              <IonLabel>{item.name}</IonLabel>
-              <IonLabel>{item.price}€</IonLabel>
-              <IonButton color="danger" onClick={handleRemove}>
-                Supprimer
+            <IonItem key={index} lines="full">
+              <IonLabel>
+                <h2>{item.name}</h2>
+                <IonText color="medium">{item.price}€</IonText>
+              </IonLabel>
+              <IonButton
+                fill="clear"
+                color="danger"
+                onClick={handleRemove}
+                size="default"
+              >
+                <IonIcon slot="icon-only" icon={removeCircleOutline} />
               </IonButton>
             </IonItem>
           ))}
         </IonList>
       </IonContent>
-      <IonFooter>
+      <IonFooter className="ion-padding">
         <IonButton expand="block" onClick={handleConfirm} color="success">
           Confirmer
         </IonButton>

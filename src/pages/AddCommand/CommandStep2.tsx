@@ -6,8 +6,17 @@ import {
   IonLabel,
   IonList,
   IonPage,
+  IonTitle,
+  IonToolbar,
+  IonHeader,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonButton,
+  IonIcon,
   useIonRouter,
 } from "@ionic/react";
+import { arrowForwardOutline, restaurantOutline } from "ionicons/icons";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import categoriesData from "../../assets/json/categories.json";
@@ -101,52 +110,66 @@ const AddCommandStep2: React.FC = () => {
 
   return (
     <IonPage>
-      <IonBreadcrumbs>
-        <IonBreadcrumb onClick={() => navigateToCommandStep(1)}>
-          Type de Commande
-        </IonBreadcrumb>
-        <IonBreadcrumb onClick={() => navigateToCommandStep(2)}>
-          Panier
-        </IonBreadcrumb>
-      </IonBreadcrumbs>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Passer une commande</IonTitle>
+        </IonToolbar>
+      </IonHeader>
 
       <IonContent className="ion-padding">
-        <IonItem>
+        <IonBreadcrumbs>
+          <IonBreadcrumb onClick={() => navigateToCommandStep(1)}>
+            Commande <IonIcon icon={restaurantOutline} slot="start" />
+          </IonBreadcrumb>
+          <IonBreadcrumb onClick={() => navigateToCommandStep(2)}>
+            Étape 2
+          </IonBreadcrumb>
+        </IonBreadcrumbs>
+
+        <IonItem lines="none" className="ion-margin-top">
           <IonLabel>
-            Commandes{" "}
-            {orderType?.type === "surplace" ? "sur Place" : "à Emporter"} -{" "}
-            {orderType?.location === "INSIDE" ? "Intérieur" : "Extérieur"}
+            <h2>
+              Commandes{" "}
+              {orderType?.type === "surplace" ? "Sur Place" : "À Emporter"} -{" "}
+              {orderType?.location === "INSIDE" ? "Intérieur" : "Extérieur"}
+            </h2>
           </IonLabel>
         </IonItem>
 
-        {/* COMMAND CLIENT */}
+        {/* BASKET SECTION */}
         {selectedProducts.length !== 0 && (
           <Basket selectedProductIds={selectedProductIds} />
         )}
 
-        {/* PRODUCTS LISTS */}
-        <IonLabel className="ion-margin-top">
-          <h2>Liste des produits</h2>
-        </IonLabel>
-        <IonList>
-          <ProductList
-            products={getFilteredProducts()}
-            onProductSelect={handleProductSelect}
-            selectedProductIds={selectedProductIds}
-          />
-        </IonList>
-
-        {/* CATEGORIES LISTS */}
-        <IonLabel className="ion-margin-top">
-          <h2>Categories Listes</h2>
-        </IonLabel>
-        <IonList>
-          <CategoryList
-            categories={categoriesData}
-            selectedCategory={selectedCategory}
-            onCategorySelect={handleCategorySelect}
-          />
-        </IonList>
+        {/* PRODUCT & CATEGORY SELECTION */}
+        <IonGrid>
+          <IonRow>
+            <IonCol size="12" size-md="6">
+              <IonLabel className="ion-margin-top">
+                <h2>Liste des produits</h2>
+              </IonLabel>
+              <IonList>
+                <ProductList
+                  products={getFilteredProducts()}
+                  onProductSelect={handleProductSelect}
+                  selectedProductIds={selectedProductIds}
+                />
+              </IonList>
+            </IonCol>
+            <IonCol size="12" size-md="6">
+              <IonLabel className="ion-margin-top">
+                <h2>Catégories</h2>
+              </IonLabel>
+              <IonList>
+                <CategoryList
+                  categories={categoriesData}
+                  selectedCategory={selectedCategory}
+                  onCategorySelect={handleCategorySelect}
+                />
+              </IonList>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

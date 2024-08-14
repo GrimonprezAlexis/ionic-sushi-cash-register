@@ -4,6 +4,7 @@ import {
   IonButton,
   IonContent,
   IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
@@ -15,9 +16,16 @@ import {
 } from "@ionic/react";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Commande, SelectedProducts } from "../core/types";
+import { Commande } from "../core/types";
 import { getCommandeById } from "../services/commandService";
 import { formatTime } from "../core/utils";
+import {
+  arrowBackOutline,
+  cashOutline,
+  cardOutline,
+  calendarOutline,
+  receiptOutline,
+} from "ionicons/icons";
 
 interface RouteParams {
   id: string;
@@ -58,30 +66,39 @@ const CommandDetailPage: FC = () => {
 
   return (
     <IonPage>
-      <IonBreadcrumbs>
-        <IonBreadcrumb onClick={() => router.back()}>
-          Liste des commandes
-        </IonBreadcrumb>
-        <IonBreadcrumb onClick={() => navigateToUrl("command/list")}>
-          Commande n°{detailCommande?.idCommande}
-        </IonBreadcrumb>
-      </IonBreadcrumbs>
+      <IonHeader>
+        <IonToolbar>
+          <IonButton slot="start" fill="clear" onClick={() => router.back()}>
+            <IonIcon icon={arrowBackOutline} />
+          </IonButton>
+          <IonTitle>Détails de la commande</IonTitle>
+        </IonToolbar>
+      </IonHeader>
 
       <IonContent className="ion-padding">
         {detailCommande ? (
           <>
-            <IonTitle>
-              Détails de la commande #{detailCommande.idCommande}
-            </IonTitle>
-            <p>Produits commandés :</p>
+            <IonBreadcrumbs>
+              <IonBreadcrumb>
+                Commande n°{detailCommande?.idCommande}
+              </IonBreadcrumb>
+            </IonBreadcrumbs>
+
             <IonList>
-              {/* Update this section based on the actual structure of `detailCommande` */}
               <IonItem>
+                <IonIcon icon={calendarOutline} slot="start" />
                 <IonLabel>
-                  Commandes{" "}
+                  Date : {formatTime(detailCommande.isoDateCommande)}
+                </IonLabel>
+              </IonItem>
+
+              <IonItem>
+                <IonIcon icon={receiptOutline} slot="start" />
+                <IonLabel>
+                  Type :{" "}
                   {detailCommande.orderType?.type === "surplace"
-                    ? "sur Place"
-                    : "à Emporter"}{" "}
+                    ? "Sur Place"
+                    : "À Emporter"}{" "}
                   -{" "}
                   {detailCommande.orderType?.location === "INSIDE"
                     ? "Intérieur"
@@ -90,13 +107,28 @@ const CommandDetailPage: FC = () => {
               </IonItem>
 
               <IonItem>
-                <IonLabel>
-                  Date : {formatTime(detailCommande.isoDateCommande)}
-                </IonLabel>
-
                 <IonLabel>Table : {detailCommande.tableNumber}</IonLabel>
                 <IonLabel>Total : {detailCommande.totalPrice} €</IonLabel>
               </IonItem>
+
+              {detailCommande.paymentMean && (
+                <IonItem>
+                  <IonIcon
+                    icon={
+                      detailCommande.paymentMean === "CASH"
+                        ? cashOutline
+                        : cardOutline
+                    }
+                    slot="start"
+                  />
+                  <IonLabel>
+                    Moyen de paiement :{" "}
+                    {detailCommande.paymentMean === "CASH"
+                      ? "Espèces"
+                      : "Carte Bancaire"}
+                  </IonLabel>
+                </IonItem>
+              )}
             </IonList>
           </>
         ) : (
