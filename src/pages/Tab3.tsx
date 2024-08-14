@@ -3,23 +3,13 @@ import ExploreContainer from '../components/ExploreContainer';
 import './Tab3.css';
 
 const Tab3: React.FC = () => {
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Tab 3</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 3</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name="Tab 3 page" />
-      </IonContent>
-    </IonPage>
-  );
+    return (
+        <IonPage id="main-content">
+            <IonContent className="ion-padding">Tab 3 the button in the toolbar to open the menu.</IonContent>
+            <ExploreContainer name="Tab 3 page" />
+        </IonPage>
+    );
 };
 
 export default Tab3;
+
