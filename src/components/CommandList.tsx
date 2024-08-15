@@ -42,7 +42,7 @@ const CommandList: React.FC<CommandListProps> = ({
   }, []);
 
   const getOrderTypeIcon = (type: string) => {
-    const icons = {
+    const icons: any = {
       surplace: restaurantOutline,
       aemporter: walkOutline,
       livraison: fastFoodOutline,
