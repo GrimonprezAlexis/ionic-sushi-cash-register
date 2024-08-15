@@ -11,7 +11,7 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { clipboardOutline } from "ionicons/icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import CommandList from "../components/CommandList";
 import { Commande } from "../core/types";
@@ -22,10 +22,11 @@ const CommandListPage: React.FC = () => {
   const router = useIonRouter();
   const history = useHistory();
   const [showLoading, setShowLoading] = useState(false);
+  const isMounted = useRef(false);
 
   useEffect(() => {
-    if (commandes.length === 0) {
-      console.log(commandes);
+    if (!isMounted.current) {
+      isMounted.current = true;
       getAllCommandes();
     }
   }, [commandes]);
