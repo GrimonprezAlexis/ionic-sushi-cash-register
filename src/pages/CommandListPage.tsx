@@ -5,6 +5,7 @@ import {
   IonContent,
   IonGrid,
   IonIcon,
+  IonLoading,
   IonPage,
   IonRow,
   useIonRouter,
@@ -20,6 +21,7 @@ const CommandListPage: React.FC = () => {
   const [commandes, setCommandes] = useState<Commande[]>([]);
   const router = useIonRouter();
   const history = useHistory();
+  const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
     if (commandes.length === 0) {
@@ -30,6 +32,7 @@ const CommandListPage: React.FC = () => {
 
   const getAllCommandes = async () => {
     try {
+      setShowLoading(true);
       const { data } = await getCommandes();
       const sortedData = data.sort((a: Commande, b: Commande) => {
         return (
@@ -38,9 +41,11 @@ const CommandListPage: React.FC = () => {
         );
       });
       console.log("commandes", data);
+      setShowLoading(false);
       setCommandes(sortedData);
     } catch (error) {
       console.error("Error fetching commandes", error);
+      setShowLoading(false);
     }
   };
 
@@ -70,6 +75,7 @@ const CommandListPage: React.FC = () => {
           onCommandSelect={handleCommandSelect}
         />
       </IonContent>
+      <IonLoading isOpen={showLoading} message={"Veuillez patienter..."} />
     </IonPage>
   );
 };
