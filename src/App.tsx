@@ -34,6 +34,7 @@ import MainLayout from "./layouts/MainLayout";
 // Store import
 import store from "./store";
 import ErrorPage from "./pages/ErrorPage";
+import PrinterSettings from "./components/printer-setting/PrinterSettings";
 
 setupIonicReact();
 
@@ -53,6 +54,9 @@ const App: React.FC = () => (
                 path="/command/list/:id"
                 component={CommandDetailPage}
               />
+              <Route exact path="/printer-settings">
+                <PrinterSettings />
+              </Route>
               <Route exact path="/">
                 <Redirect to="/command/1" />
               </Route>
