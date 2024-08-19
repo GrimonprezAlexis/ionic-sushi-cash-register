@@ -29,12 +29,13 @@ import AddCommandStep1 from "./pages/AddCommand/CommandStep1";
 import AddCommandStep2 from "./pages/AddCommand/CommandStep2";
 import CommandDetailPage from "./pages/CommandDetailPage";
 import CommandListPage from "./pages/CommandListPage";
+import PrinterSettings from "./pages/PrinterSettings";
+
 import MainLayout from "./layouts/MainLayout";
 
 // Store import
 import store from "./store";
 import ErrorPage from "./pages/ErrorPage";
-import PrinterSettings from "./components/printer-setting/PrinterSettings";
 
 setupIonicReact();
 
@@ -54,9 +55,11 @@ const App: React.FC = () => (
                 path="/command/list/:id"
                 component={CommandDetailPage}
               />
-              <Route exact path="/printer-settings">
-                <PrinterSettings />
-              </Route>
+              <Route
+                exact
+                path="/printer-settings"
+                component={PrinterSettings}
+              />
               <Route exact path="/">
                 <Redirect to="/command/1" />
               </Route>

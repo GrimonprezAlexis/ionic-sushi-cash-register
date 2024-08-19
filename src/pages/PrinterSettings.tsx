@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonContent,
   IonHeader,
@@ -25,18 +25,32 @@ import {
   restaurantOutline,
   wifiOutline,
 } from "ionicons/icons";
-import printerImage from "../../assets/images/printer.png";
+import printerImage from "../assets/images/printer.png";
+import { printTestPage } from "../services/commandService";
 
 const PrinterSettings: React.FC = () => {
   const [view, setView] = useState<"list" | "new">("list");
   const [searching, setSearching] = useState(false);
-  const [printers, setPrinters] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+
+  const [printers, setPrinters] = useState<string[]>([]);
   const [printerType, setPrinterType] = useState<"WIFI" | "BLUETOOTH" | "USB">(
     "WIFI"
   );
+
+  const handlePrintTest = async (printerIP: string) => {
+    try {
+      const { data } = await printTestPage({ printerIP });
+      setShowToast(true);
+      setToastMessage(data.message);
+    } catch (error) {
+      console.error("Error print page", error);
+      setShowToast(false);
+      setToastMessage("Erreur d'impression");
+    }
+  };
 
   const handlePrinterType = (printerType: "WIFI" | "BLUETOOTH" | "USB") => {
     setPrinterType(printerType);
@@ -75,50 +89,11 @@ const PrinterSettings: React.FC = () => {
     }
 
     await Promise.all(fetchPromises);
-
     setSearching(false);
-
     if (detectedPrinters.length > 0) {
       setPrinters(detectedPrinters);
     } else {
       setError("No printers found on the network.");
-    }
-  };
-
-  // Function to print a test page on the Epson TM-T20II
-  const printTestPage = async (printerIP: string) => {
-    try {
-      const response = await fetch(
-        `http://${printerIP}/cgi-bin/epos/service.cgi?devid=local_printer&timeout=10000`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/xml",
-          },
-          body: `
-                    <?xml version="1.0" encoding="UTF-8"?>
-                    <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
-                        <text align="center">*** TEST PRINT ***</text>
-                        <text align="center">-------------------------</text>
-                        <text align="center">Epson TM-T20II Test Page</text>
-                        <text align="center">-------------------------</text>
-                        <cut />
-                    </epos-print>
-                `,
-        }
-      );
-
-      if (response.ok || response.type === "opaque") {
-        setToastMessage(`Test print sent successfully to ${printerIP}.`);
-        setShowToast(true);
-      } else {
-        throw new Error(`Failed with status: ${response.status}`);
-      }
-    } catch (error) {
-      setToastMessage(
-        `Failed to send test print to ${printerIP}: ${error.message}`
-      );
-      setShowToast(true);
     }
   };
 
@@ -191,7 +166,7 @@ const PrinterSettings: React.FC = () => {
                   <IonButton
                     slot="end"
                     color="primary"
-                    onClick={() => printTestPage(printer)}
+                    onClick={() => handlePrintTest(printer)}
                   >
                     Imprimer une page de test
                   </IonButton>
