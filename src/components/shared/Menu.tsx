@@ -16,7 +16,8 @@ import {
   clipboardOutline,
   cubeOutline,
   layersOutline,
-  logOutOutline, printOutline,
+  logOutOutline,
+  printOutline,
   restaurantOutline,
   settingsOutline,
   statsChartOutline,
@@ -62,7 +63,7 @@ const MenuComponent: React.FC = () => {
 
       <IonContent>
         <IonList>
-          <IonItem button onClick={() => navigateTo("/command/1")}>
+          <IonItem href="/command/1">
             <IonIcon
               aria-hidden="true"
               icon={restaurantOutline}
@@ -104,18 +105,18 @@ const MenuComponent: React.FC = () => {
           </IonItem>
           <IonItem button onClick={() => navigateTo("/settings")}>
             <IonIcon
-                aria-hidden="true"
-                icon={settingsOutline}
-                slot="start"
+              aria-hidden="true"
+              icon={settingsOutline}
+              slot="start"
             ></IonIcon>
             <IonLabel>Paramètres</IonLabel>
           </IonItem>
 
           <IonItem button onClick={() => navigateTo("/printer-settings")}>
             <IonIcon
-                aria-hidden="true"
-                icon={printOutline}
-                slot="start"
+              aria-hidden="true"
+              icon={printOutline}
+              slot="start"
             ></IonIcon>
             <IonLabel>Paramètres d'imprimante</IonLabel>
           </IonItem>

@@ -34,7 +34,7 @@ const CommandListPage: React.FC = () => {
   const [commandes, setCommandes] = useState<Commande[]>([]);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]);
   const [paymentStatus, setPaymenStatus] = useState<PaymentStatusEnum>(
-    PaymentStatusEnum.ALL
+    PaymentStatusEnum.PENDING
   );
   const [searchText, setSearchText] = useState<string>("");
 
@@ -102,6 +102,13 @@ const CommandListPage: React.FC = () => {
     }, 0);
   };
 
+  const countCommandByType = (paymentStatus: PaymentStatusEnum) => {
+    if (paymentStatus === PaymentStatusEnum.ALL)
+      return filteredCommandes.length;
+    return filteredCommandes.filter((x) => x.paymentStatus === paymentStatus)
+      .length;
+  };
+
   return (
     <IonPage>
       <IonContent>
@@ -147,7 +154,9 @@ const CommandListPage: React.FC = () => {
                     icon={hourglassOutline}
                     style={{ marginRight: "8px", color: "#000" }}
                   />
-                  <IonLabel>En attente</IonLabel>
+                  <IonLabel>
+                    En attente ({countCommandByType(PaymentStatusEnum.PENDING)})
+                  </IonLabel>
                 </div>
               </IonSegmentButton>
 
@@ -157,7 +166,9 @@ const CommandListPage: React.FC = () => {
                     icon={listOutline}
                     style={{ marginRight: "8px", color: "#000" }}
                   />
-                  <IonLabel>Tout afficher</IonLabel>
+                  <IonLabel>
+                    Tout afficher ({countCommandByType(PaymentStatusEnum.ALL)})
+                  </IonLabel>
                 </div>
               </IonSegmentButton>
 
@@ -167,7 +178,9 @@ const CommandListPage: React.FC = () => {
                     icon={checkmarkCircleOutline}
                     style={{ marginRight: "8px", color: "#000" }}
                   />
-                  <IonLabel>Payé</IonLabel>
+                  <IonLabel>
+                    Payé ({countCommandByType(PaymentStatusEnum.PAID)})
+                  </IonLabel>
                 </div>
               </IonSegmentButton>
             </IonSegment>

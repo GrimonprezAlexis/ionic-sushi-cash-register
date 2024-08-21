@@ -65,7 +65,7 @@ const BasketAction: React.FC = () => {
 
     if (res?.success) {
       setShowToast({ isOpen: true, message: "Commande ajoutée avec succès" });
-      router.push("/command/list");
+      router.push(`/command/list/${res.data.id}`);
     } else if (res.error) {
       setShowToast({ isOpen: true, message: `Erreur : ${res.error}` });
     } else {

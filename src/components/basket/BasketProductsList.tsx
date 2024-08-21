@@ -14,13 +14,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import {
   setSelectedBasketItem,
+  setSelectedProductIds,
   setSelectedProducts,
 } from "../../store/actions";
-import { Product } from "../../core/types";
+import { Product, SelectedProductIds } from "../../core/types";
 
 const BasketProductsList: React.FC = () => {
   const dispatch = useDispatch();
 
+  const selectedProductIds = useSelector(
+    (state: RootState) => state.command.selectedProductIds
+  );
   const selectedProducts = useSelector(
     (state: RootState) => state.command.selectedProducts
   );
@@ -32,18 +36,29 @@ const BasketProductsList: React.FC = () => {
     product: Product,
     operation: "increment" | "decrement"
   ) => {
-    const updatedProducts = selectedProducts.map((item: Product) =>
-      item.id === product.id
-        ? {
-            ...item,
-            quantity:
-              operation === "increment"
-                ? item.quantity! + 1
-                : item.quantity! - 1,
-          }
-        : item
-    );
+    const updatedProducts = selectedProducts
+      .map((item: Product) =>
+        item.id === product.id
+          ? {
+              ...item,
+              quantity:
+                operation === "increment"
+                  ? item.quantity! + 1
+                  : item.quantity! - 1,
+            }
+          : item
+      )
+      .filter((item: Product) => item.quantity! > 0);
+
     dispatch(setSelectedProducts(updatedProducts));
+
+    if (!updatedProducts.length) dispatch(setSelectedProductIds([]));
+    else {
+      const test = updatedProducts.map((x: Product) => {
+        return { id: x.id };
+      });
+      dispatch(setSelectedProductIds(test));
+    }
   };
 
   return (
