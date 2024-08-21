@@ -10,7 +10,12 @@ import {
 } from "@ionic/react";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Commande, EtatCommandeEnum, SelectedProducts } from "../../core/types";
+import {
+  Commande,
+  EtatCommandeEnum,
+  PaymentStatusEnum,
+  SelectedProducts,
+} from "../../core/types";
 import { generateUniqueId } from "../../core/utils";
 import { addCommande } from "../../services/commandService";
 import { RootState } from "../../store";
@@ -52,7 +57,8 @@ const BasketAction: React.FC = () => {
       products: selectedProducts,
       productsIds: selectedProductIds,
       orderType: orderType,
-      etat: EtatCommandeEnum.PENDING,
+      etat: EtatCommandeEnum.CONFIRMED,
+      paymentStatus: PaymentStatusEnum.PENDING,
       totalPrice: calculateTotalPrice(selectedProducts),
     };
 

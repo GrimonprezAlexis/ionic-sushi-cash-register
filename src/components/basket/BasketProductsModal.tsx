@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import {
   setSelectedBasketItem,
+  setSelectedProductIds,
   setSelectedProducts,
 } from "../../store/actions";
 import { SelectedProducts } from "../../core/types";

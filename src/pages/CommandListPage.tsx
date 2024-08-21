@@ -5,16 +5,23 @@ import {
   IonContent,
   IonGrid,
   IonIcon,
+  IonLabel,
   IonLoading,
   IonPage,
   IonRow,
+  IonSegment,
+  IonSegmentButton,
   useIonRouter,
 } from "@ionic/react";
-import { clipboardOutline } from "ionicons/icons";
+import {
+  clipboardOutline,
+  clipboardSharp,
+  partlySunnyOutline,
+} from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import CommandList from "../components/CommandList";
-import { Commande } from "../core/types";
+import { Commande, EtatCommandeEnum, PaymentStatusEnum } from "../core/types";
 import { getCommandes } from "../services/commandService";
 
 const CommandListPage: React.FC = () => {
@@ -54,6 +61,10 @@ const CommandListPage: React.FC = () => {
     history.push(`/command/list/${commande.idCommande}`);
   };
 
+  const handlePaymenStatus = (paymentStatus: PaymentStatusEnum) => {
+    setCommandes(commandes.filter((x) => x.paymentStatus === paymentStatus));
+  };
+
   return (
     <IonPage>
       <IonContent>
@@ -70,6 +81,33 @@ const CommandListPage: React.FC = () => {
             </IonCol>
           </IonRow>
         </IonGrid>
+
+        <IonRow className="ion-margin-top">
+          <IonCol>
+            <IonLabel>Type de commande</IonLabel>
+            <IonSegment>
+              <IonSegmentButton value="PENDING">
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <IonIcon
+                    icon={clipboardSharp}
+                    style={{ marginRight: "8px", color: "#000" }}
+                  />
+                  <IonLabel>En attente de paiement</IonLabel>
+                </div>
+              </IonSegmentButton>
+
+              <IonSegmentButton value="PAID">
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <IonIcon
+                    icon={partlySunnyOutline}
+                    style={{ marginRight: "8px", color: "#000" }}
+                  />
+                  <IonLabel>Payé</IonLabel>
+                </div>
+              </IonSegmentButton>
+            </IonSegment>
+          </IonCol>
+        </IonRow>
 
         <CommandList
           commandes={commandes}

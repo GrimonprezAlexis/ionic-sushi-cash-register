@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
+dayjs.locale("fr");
 
 export const containsSubArray = (
   mainArray: any[],
@@ -22,7 +23,7 @@ export const generateUniqueId = () => {
 export const formatTime = (
   isoDate: string | number | Date | dayjs.Dayjs | null | undefined
 ) => {
-  return dayjs(isoDate).format("dddd HH:mm"); // Format "Lundi hh:mm"
+  return dayjs(isoDate).format("dddd D MMMM YYYY - HH:mm");
 };
 
 export const calculateElapsedTime = (

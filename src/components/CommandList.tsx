@@ -60,7 +60,7 @@ const CommandList: React.FC<CommandListProps> = ({
                 <IonCol size="auto">
                   <IonBadge
                     color={
-                      commande.etat === EtatCommandeEnum.SERVIE
+                      commande.etat === EtatCommandeEnum.CONFIRMED
                         ? "success"
                         : "warning"
                     }

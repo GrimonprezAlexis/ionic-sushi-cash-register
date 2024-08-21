@@ -11,6 +11,10 @@ export interface SelectedProducts extends Product {
   quantity: number;
 }
 
+export interface SelectedProductIds {
+  id: number;
+}
+
 export interface Commande {
   idCommande: string;
   isoDateCommande: string;
@@ -22,6 +26,7 @@ export interface Commande {
   totalPrice: number;
   // TODO
   idClient?: string;
+  paymentStatus: PaymentStatusEnum;
   paymentMean?: "CASH" | "CB";
 }
 
@@ -30,8 +35,17 @@ export interface OrderType {
   location?: "INSIDE" | "OUTSIDE";
 }
 
-export enum EtatCommandeEnum {
+export enum PaymentStatusEnum {
   PENDING = "PENDING",
-  SERVIE = "SERVIE",
-  VALIDER = "VALIDER",
+  PAID = "PAID",
+}
+
+export enum EtatCommandeEnum {
+  CONFIRMED = "CONFIRMED",
+  SERVED = "SERVED",
+}
+
+export enum LabelEtatCommandeEnum {
+  CONFIRMED = "Commande confirmé",
+  SERVED = "Commande servie",
 }

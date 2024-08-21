@@ -1,5 +1,6 @@
 import {
   IonAvatar,
+  IonButton,
   IonCol,
   IonGrid,
   IonItem,
@@ -12,16 +13,46 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SelectedProducts } from "../../core/types";
 import { RootState } from "../../store";
-import { setSelectedBasketItem } from "../../store/actions";
+import {
+  setSelectedBasketItem,
+  setSelectedCategory,
+  setSelectedProductIds,
+  setSelectedProducts,
+} from "../../store/actions";
 
 const BasketProductsList: React.FC = () => {
   const dispatch = useDispatch();
   const selectedProducts = useSelector(
     (state: RootState) => state.command.selectedProducts
   );
+  const selectedProductIds = useSelector(
+    (state: RootState) => state.command.selectedProductIds
+  );
 
   const onSelectBasketItem = (selectedBasketItem: SelectedProducts) => {
     dispatch(setSelectedBasketItem(selectedBasketItem));
+  };
+
+  const handleQuantityChange = (
+    product: SelectedProducts,
+    operation: "increment" | "decrement"
+  ) => {
+    const updatedProducts = selectedProducts.map((item: SelectedProducts) =>
+      item.id === product.id
+        ? {
+            ...item,
+            quantity:
+              operation === "increment" ? item.quantity + 1 : item.quantity - 1,
+          }
+        : item
+    );
+
+    const updatedSelectedProductIds = updatedProducts.map(
+      ({ id, quantity }: SelectedProducts) => ({ id, quantity })
+    );
+
+    dispatch(setSelectedProducts(updatedProducts));
+    dispatch(setSelectedProductIds(updatedSelectedProductIds));
   };
 
   return (
@@ -42,7 +73,30 @@ const BasketProductsList: React.FC = () => {
               <IonCol>
                 <IonLabel>
                   <h3 style={{ margin: 0 }}>{item.name}</h3>
-                  <IonText color="medium">Quantité: x{item.quantity}</IonText>
+                  <IonText color="medium">
+                    Quantité:
+                    <IonButton
+                      size="small"
+                      fill="clear"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleQuantityChange(item, "decrement");
+                      }}
+                    >
+                      -
+                    </IonButton>
+                    {item.quantity}
+                    <IonButton
+                      size="small"
+                      fill="clear"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleQuantityChange(item, "increment");
+                      }}
+                    >
+                      +
+                    </IonButton>
+                  </IonText>
                 </IonLabel>
               </IonCol>
               <IonCol size="auto" className="ion-text-end">
