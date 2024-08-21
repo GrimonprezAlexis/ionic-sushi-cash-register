@@ -11,53 +11,44 @@ import {
 } from "@ionic/react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { SelectedProducts } from "../../core/types";
 import { RootState } from "../../store";
 import {
   setSelectedBasketItem,
-  setSelectedCategory,
-  setSelectedProductIds,
   setSelectedProducts,
 } from "../../store/actions";
+import { Product } from "../../core/types";
 
 const BasketProductsList: React.FC = () => {
   const dispatch = useDispatch();
+
   const selectedProducts = useSelector(
     (state: RootState) => state.command.selectedProducts
   );
-  const selectedProductIds = useSelector(
-    (state: RootState) => state.command.selectedProductIds
-  );
-
-  const onSelectBasketItem = (selectedBasketItem: SelectedProducts) => {
+  const onSelectBasketItem = (selectedBasketItem: Product) => {
     dispatch(setSelectedBasketItem(selectedBasketItem));
   };
 
   const handleQuantityChange = (
-    product: SelectedProducts,
+    product: Product,
     operation: "increment" | "decrement"
   ) => {
-    const updatedProducts = selectedProducts.map((item: SelectedProducts) =>
+    const updatedProducts = selectedProducts.map((item: Product) =>
       item.id === product.id
         ? {
             ...item,
             quantity:
-              operation === "increment" ? item.quantity + 1 : item.quantity - 1,
+              operation === "increment"
+                ? item.quantity! + 1
+                : item.quantity! - 1,
           }
         : item
     );
-
-    const updatedSelectedProductIds = updatedProducts.map(
-      ({ id, quantity }: SelectedProducts) => ({ id, quantity })
-    );
-
     dispatch(setSelectedProducts(updatedProducts));
-    dispatch(setSelectedProductIds(updatedSelectedProductIds));
   };
 
   return (
     <IonList>
-      {selectedProducts.map((item: SelectedProducts) => (
+      {selectedProducts.map((item: Product) => (
         <IonItem key={item.id} onClick={() => onSelectBasketItem(item)} button>
           <IonGrid>
             <IonRow className="ion-align-items-center ion-no-padding">
@@ -102,7 +93,7 @@ const BasketProductsList: React.FC = () => {
               <IonCol size="auto" className="ion-text-end">
                 <IonText color="primary">
                   <h3 style={{ margin: 0 }}>
-                    {(item.price * item.quantity).toFixed(2)}€
+                    {(item.price * item.quantity!).toFixed(2)}€
                   </h3>
                 </IonText>
               </IonCol>

@@ -1,3 +1,19 @@
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonFooter,
+  IonHeader,
+  IonIcon,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonModal,
+  IonText,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import { closeOutline, removeCircleOutline } from "ionicons/icons";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -6,23 +22,7 @@ import {
   setSelectedProductIds,
   setSelectedProducts,
 } from "../../store/actions";
-import { SelectedProducts } from "../../core/types";
-import {
-  IonButton,
-  IonContent,
-  IonFooter,
-  IonHeader,
-  IonItem,
-  IonLabel,
-  IonList,
-  IonModal,
-  IonTitle,
-  IonToolbar,
-  IonIcon,
-  IonButtons,
-  IonText,
-} from "@ionic/react";
-import { closeOutline, removeCircleOutline } from "ionicons/icons";
+import { Product, SelectedProductIds } from "../../core/types";
 
 interface SelectedProductsModalProps {
   isOpen: boolean;
@@ -37,16 +37,19 @@ const BasketProductsModal: React.FC<SelectedProductsModalProps> = ({
   const selectedProducts = useSelector(
     (state: RootState) => state.command.selectedProducts
   );
-  const basketItemSelected = useSelector(
+  const selectedProductIds = useSelector(
+    (state: RootState) => state.command.selectedProductIds
+  );
+  const selectedBasketItem = useSelector(
     (state: RootState) => state.command.selectedBasketItem
   );
 
   const handleRemove = () => {
-    if (basketItemSelected.quantity > 1) {
+    if (selectedBasketItem.quantity > 1) {
       dispatch(
         setSelectedBasketItem({
-          ...basketItemSelected,
-          quantity: basketItemSelected.quantity - 1,
+          ...selectedBasketItem,
+          quantity: selectedBasketItem.quantity - 1,
         })
       );
     } else {
@@ -56,67 +59,81 @@ const BasketProductsModal: React.FC<SelectedProductsModalProps> = ({
 
   const handleConfirm = () => {
     const updatedProducts = selectedProducts
-      .map((product: SelectedProducts) =>
-        product.id === basketItemSelected.id
-          ? { ...product, quantity: basketItemSelected.quantity }
+      .map((product: Product) =>
+        product.id === selectedBasketItem.id
+          ? { ...product, quantity: selectedBasketItem.quantity }
           : product
       )
-      .filter((product: SelectedProducts) => product.quantity > 0);
+      .filter((product: Product) => product.quantity! > 0);
 
     dispatch(setSelectedProducts(updatedProducts));
-    onClose();
   };
 
   const handleLastItemRemove = () => {
     const updatedProducts = selectedProducts.filter(
-      (product: SelectedProducts) => product.id !== basketItemSelected.id
+      (product: Product) => product.id !== selectedBasketItem.id
     );
     dispatch(setSelectedProducts(updatedProducts));
+    dispatch(
+      setSelectedProductIds(
+        selectedProductIds.filter(
+          (x: SelectedProductIds) => x.id !== selectedBasketItem.id
+        )
+      )
+    );
+    dispatch(setSelectedBasketItem(null));
+    handleOnClose();
+  };
+
+  const handleOnClose = () => {
+    dispatch(setSelectedBasketItem(null));
     onClose();
   };
 
-  const expandedProductList = Array(basketItemSelected.quantity).fill(
-    basketItemSelected
+  const expandedProductList = Array(selectedBasketItem?.quantity).fill(
+    selectedBasketItem
   );
 
   return (
-    <IonModal isOpen={isOpen} onDidDismiss={onClose}>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>{basketItemSelected.name}</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={onClose}>
-              <IonIcon icon={closeOutline} />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent>
-        <IonList>
-          {expandedProductList.map((item, index) => (
-            <IonItem key={index} lines="full">
-              <IonLabel>
-                <h2>{item.name}</h2>
-                <IonText color="medium">{item.price}€</IonText>
-              </IonLabel>
-              <IonButton
-                fill="clear"
-                color="danger"
-                onClick={handleRemove}
-                size="default"
-              >
-                <IonIcon slot="icon-only" icon={removeCircleOutline} />
+    isOpen && (
+      <IonModal isOpen={isOpen} onDidDismiss={handleOnClose}>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>{selectedBasketItem.name}</IonTitle>
+            <IonButtons slot="end">
+              <IonButton onClick={handleOnClose}>
+                <IonIcon icon={closeOutline} />
               </IonButton>
-            </IonItem>
-          ))}
-        </IonList>
-      </IonContent>
-      <IonFooter className="ion-padding">
-        <IonButton expand="block" onClick={handleConfirm} color="success">
-          Confirmer
-        </IonButton>
-      </IonFooter>
-    </IonModal>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonList>
+            {expandedProductList.map((item, index) => (
+              <IonItem key={index} lines="full">
+                <IonLabel>
+                  <h2>{item.name}</h2>
+                  <IonText color="medium">{item.price}€</IonText>
+                </IonLabel>
+                <IonButton
+                  fill="clear"
+                  color="danger"
+                  onClick={handleRemove}
+                  size="default"
+                >
+                  <IonIcon slot="icon-only" icon={removeCircleOutline} />
+                </IonButton>
+              </IonItem>
+            ))}
+          </IonList>
+        </IonContent>
+        <IonFooter className="ion-padding">
+          <IonButton expand="block" onClick={handleConfirm} color="success">
+            Confirmer
+          </IonButton>
+        </IonFooter>
+      </IonModal>
+    )
   );
 };
 

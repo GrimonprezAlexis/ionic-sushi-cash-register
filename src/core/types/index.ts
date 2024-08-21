@@ -5,10 +5,7 @@ export interface Product {
   price: number;
   icon?: string;
   photo?: string | null;
-}
-
-export interface SelectedProducts extends Product {
-  quantity: number;
+  quantity?: number;
 }
 
 export interface SelectedProductIds {
@@ -20,7 +17,6 @@ export interface Commande {
   isoDateCommande: string;
   tableNumber: number;
   products: Product[];
-  productsIds: number[];
   orderType: OrderType;
   etat: EtatCommandeEnum;
   totalPrice: number;

@@ -24,7 +24,11 @@ import productsData from "../../assets/json/products.json";
 import Basket from "../../components/basket/Basket";
 import CategoryList from "../../components/CategoryList";
 import ProductList from "../../components/ProductList";
-import { SelectedProducts } from "../../core/types";
+import {
+  Product,
+  SelectedProductIds,
+  SelectedProducts,
+} from "../../core/types";
 import { RootState } from "../../store";
 import {
   setSelectedCategory,
@@ -49,7 +53,6 @@ const AddCommandStep2: React.FC = () => {
   );
 
   useEffect(() => {
-    updateCurrentProducts();
     if (!orderType) navigateToUrl("/command/1");
   }, [selectedProductIds]);
 
@@ -57,41 +60,18 @@ const AddCommandStep2: React.FC = () => {
     dispatch(setSelectedCategory(category));
   };
 
-  const handleProductSelect = (product: SelectedProducts) => {
-    const existingProduct = selectedProductIds.find(
-      (item: SelectedProducts) => item.id === product.id
-    );
+  const handleProductSelect = (product: Product) => {
+    console.log("product", product);
 
-    let updatedProductIds;
-    if (existingProduct) {
-      updatedProductIds = selectedProductIds.map((item: SelectedProducts) =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      );
-    } else {
-      updatedProductIds = [
+    dispatch(
+      setSelectedProductIds([
         ...selectedProductIds,
-        { id: product.id, quantity: 1 },
-      ];
-    }
-
-    dispatch(setSelectedProductIds(updatedProductIds));
-  };
-
-  const updateCurrentProducts = () => {
-    const filteredProductsByIds = productsData
-      .filter((product) =>
-        selectedProductIds.some(
-          (item: SelectedProducts) => item.id === product.id
-        )
-      )
-      .map((product) => ({
-        ...product,
-        quantity: selectedProductIds.find(
-          (item: SelectedProducts) => item.id === product.id
-        ).quantity,
-      }));
-
-    dispatch(setSelectedProducts(filteredProductsByIds));
+        {
+          id: product.id,
+        },
+      ])
+    );
+    dispatch(setSelectedProducts([...selectedProducts, product]));
   };
 
   const getFilteredProducts = () => {
@@ -137,9 +117,7 @@ const AddCommandStep2: React.FC = () => {
         </IonItem>
 
         {/* BASKET SECTION */}
-        {selectedProducts.length !== 0 && (
-          <Basket selectedProductIds={selectedProductIds} />
-        )}
+        {selectedProducts.length !== 0 && <Basket />}
 
         {/* PRODUCT & CATEGORY SELECTION */}
         <IonGrid>
@@ -152,7 +130,6 @@ const AddCommandStep2: React.FC = () => {
                 <ProductList
                   products={getFilteredProducts()}
                   onProductSelect={handleProductSelect}
-                  selectedProductIds={selectedProductIds}
                 />
               </IonList>
             </IonCol>

@@ -6,11 +6,7 @@ import BasketAction from "./BasketAction";
 import BasketProductsList from "./BasketProductsList";
 import BasketProductsModal from "./BasketProductsModal";
 
-interface BasketProps {
-  selectedProductIds: number[];
-}
-
-const Basket: React.FC<BasketProps> = ({ selectedProductIds }) => {
+const Basket: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const selectedBasketItem = useSelector(

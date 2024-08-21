@@ -22,13 +22,9 @@ import { RootState } from "../../store";
 
 const BasketAction: React.FC = () => {
   const orderType = useSelector((state: RootState) => state.command.orderType);
-  const selectedProductIds = useSelector(
-    (state: RootState) => state.command.selectedProductIds
-  );
   const selectedProducts = useSelector(
     (state: RootState) => state.command.selectedProducts
   );
-
   const [showLoading, setShowLoading] = useState(false);
   const [showToast, setShowToast] = useState<{
     isOpen: boolean;
@@ -39,7 +35,6 @@ const BasketAction: React.FC = () => {
   });
 
   const router = useIonRouter();
-  const dispatch = useDispatch();
 
   const calculateTotalPrice = (products: SelectedProducts[]) => {
     const totalPrice = products.reduce((total, product) => {
@@ -55,7 +50,6 @@ const BasketAction: React.FC = () => {
       isoDateCommande: new Date().toISOString(),
       tableNumber: Math.round(Math.random()),
       products: selectedProducts,
-      productsIds: selectedProductIds,
       orderType: orderType,
       etat: EtatCommandeEnum.CONFIRMED,
       paymentStatus: PaymentStatusEnum.PENDING,
@@ -101,7 +95,7 @@ const BasketAction: React.FC = () => {
       <IonCol size="6">
         <IonButton
           onClick={() => console.log("Imprimer le ticket")}
-          disabled={selectedProductIds.length === 0}
+          disabled={selectedProducts.length === 0}
         >
           Imprimer le ticket
         </IonButton>
@@ -109,7 +103,7 @@ const BasketAction: React.FC = () => {
       <IonCol size="6">
         <IonButton
           onClick={handleNewCommand}
-          disabled={selectedProductIds.length === 0}
+          disabled={selectedProducts.length === 0}
           color="primary"
         >
           Valider

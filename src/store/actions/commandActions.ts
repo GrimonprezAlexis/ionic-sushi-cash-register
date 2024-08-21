@@ -1,5 +1,10 @@
 // Action Types
-import { OrderType, Product, SelectedProducts } from "../../core/types";
+import {
+  OrderType,
+  Product,
+  SelectedProductIds,
+  SelectedProducts,
+} from "../../core/types";
 
 export const SET_SELECTED_PRODUCTS = "SET_SELECTED_PRODUCTS";
 export const SET_SELECTED_PRODUCT_IDS = "SET_SELECTED_PRODUCT_IDS";
@@ -13,7 +18,7 @@ export const setSelectedProducts = (products: Product[]) => ({
   payload: products,
 });
 
-export const setSelectedProductIds = (productIds: number[]) => ({
+export const setSelectedProductIds = (productIds: SelectedProductIds[]) => ({
   type: SET_SELECTED_PRODUCT_IDS,
   payload: productIds,
 });

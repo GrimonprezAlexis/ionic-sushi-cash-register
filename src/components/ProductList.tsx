@@ -1,6 +1,6 @@
 import React from "react";
 import { IonIcon } from "@ionic/react";
-import { Product, SelectedProducts } from "../core/types";
+import { Product, SelectedProductIds, SelectedProducts } from "../core/types";
 import { checkmark } from "ionicons/icons";
 import {
   StyledListProduct,
@@ -10,29 +10,39 @@ import {
   StyledStyledProductPriceIcon,
   StyledWrapperProduct,
 } from "../assets/styled/styled-product-list";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import { setSelectedProductIds } from "../store/actions";
 
 interface ProductListProps {
   products: Product[];
-  selectedProductIds: SelectedProducts[];
-  onProductSelect: (product: SelectedProducts) => void;
+  onProductSelect: (product: Product) => void;
 }
-
-const handleProductClick = (product: Product, onProductSelect: any) => {
-  const selectedProduct: SelectedProducts = { ...product, quantity: 1 };
-  onProductSelect(selectedProduct);
-};
 
 const ProductList: React.FC<ProductListProps> = ({
   products,
-  selectedProductIds,
   onProductSelect,
 }) => {
+  const selectedProductIds = useSelector(
+    (state: RootState) => state.command.selectedProductIds
+  );
+
+  const handleProductClick = (product: Product, onProductSelect: any) => {
+    const existingProduct = selectedProductIds.some(
+      (x: SelectedProductIds) => x.id === product.id
+    );
+    if (!existingProduct) onProductSelect({ ...product, quantity: 1 });
+  };
+
   return (
     <StyledWrapperProduct>
       {products.map((product) => {
         const isProductSelected = selectedProductIds.some(
-          (e: SelectedProducts) => e.id === product.id
+          (e: SelectedProductIds) => {
+            return e.id === product.id;
+          }
         );
+
         return (
           <StyledListProduct
             key={product.id}
