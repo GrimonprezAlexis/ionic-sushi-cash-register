@@ -34,6 +34,13 @@ export interface OrderType {
 export enum PaymentStatusEnum {
   PENDING = "PENDING",
   PAID = "PAID",
+  ALL = "ALL",
+}
+
+export enum LabelPaymentStatusEnum {
+  PENDING = "A régler",
+  PAID = "Terminé",
+  ALL = "Tout",
 }
 
 export enum EtatCommandeEnum {

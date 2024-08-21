@@ -12,14 +12,15 @@ export const StyledWrapperProduct = styled.ul`
 `;
 
 export const StyledListProduct = styled.li`
-    display: inline-block;
-    margin: 1.2rem;
-    width: 40%;
-    min-width: 30%;
+  display: inline-block;
+  margin: 1.2rem;
+  width: 40%;
+  min-width: 30%;
 `;
 
 export const StyledProductSquare = styled.div`
-  background-color: #ffffff;
+  border: 2px solid;
+  border-color: #9b9b9b;
   padding: 15px;
   border-radius: 10px;
   box-shadow: ${boxShadow};
@@ -32,10 +33,10 @@ export const StyledProductSquare = styled.div`
 `;
 
 export const StyledProductName = styled.span`
-    font-size: .8rem;
-    font-weight: bold;
-    margin-bottom: 8px;
-    display: block;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
 `;
 
 export const StyledProductPrice = styled.span`

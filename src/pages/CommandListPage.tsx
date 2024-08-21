@@ -11,21 +11,33 @@ import {
   IonRow,
   IonSegment,
   IonSegmentButton,
+  IonSearchbar,
   useIonRouter,
+  IonInput,
+  IonDatetime,
 } from "@ionic/react";
 import {
+  checkmarkCircleOutline,
   clipboardOutline,
   clipboardSharp,
-  partlySunnyOutline,
+  hourglassOutline,
+  listOutline,
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import CommandList from "../components/CommandList";
-import { Commande, EtatCommandeEnum, PaymentStatusEnum } from "../core/types";
+import { Commande, PaymentStatusEnum } from "../core/types";
 import { getCommandes } from "../services/commandService";
+import CommandListTotal from "../components/CommandListTotal";
 
 const CommandListPage: React.FC = () => {
   const [commandes, setCommandes] = useState<Commande[]>([]);
+  const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]);
+  const [paymentStatus, setPaymenStatus] = useState<PaymentStatusEnum>(
+    PaymentStatusEnum.ALL
+  );
+  const [searchText, setSearchText] = useState<string>("");
+
   const router = useIonRouter();
   const history = useHistory();
   const [showLoading, setShowLoading] = useState(false);
@@ -36,7 +48,7 @@ const CommandListPage: React.FC = () => {
       isMounted.current = true;
       getAllCommandes();
     }
-  }, [commandes]);
+  }, []);
 
   const getAllCommandes = async () => {
     try {
@@ -48,9 +60,9 @@ const CommandListPage: React.FC = () => {
           new Date(a.isoDateCommande).getTime()
         );
       });
-      console.log("commandes", data);
       setShowLoading(false);
       setCommandes(sortedData);
+      setFilteredCommandes(sortedData); // Initialize with all commandes
     } catch (error) {
       console.error("Error fetching commandes", error);
       setShowLoading(false);
@@ -61,8 +73,33 @@ const CommandListPage: React.FC = () => {
     history.push(`/command/list/${commande.idCommande}`);
   };
 
-  const handlePaymenStatus = (paymentStatus: PaymentStatusEnum) => {
-    setCommandes(commandes.filter((x) => x.paymentStatus === paymentStatus));
+  const handleCommandTypeChange = (value: PaymentStatusEnum) => {
+    setPaymenStatus(value);
+    filterCommandes(searchText, value);
+  };
+
+  const filterCommandes = (searchText: string, status: PaymentStatusEnum) => {
+    const filtered = commandes.filter((x) => {
+      const matchesDate = x.isoDateCommande.includes(searchText);
+      const matchesStatus =
+        status === PaymentStatusEnum.ALL || x.paymentStatus === status;
+      return matchesDate && matchesStatus;
+    });
+    setFilteredCommandes(filtered);
+  };
+
+  const handleSearchChange = (text: string) => {
+    setSearchText(text);
+    filterCommandes(text, paymentStatus);
+  };
+
+  const sumTotalPrice = () => {
+    return filteredCommandes.reduce((total, commande) => {
+      {
+        return total + commande.totalPrice;
+      }
+      return total;
+    }, 0);
   };
 
   return (
@@ -76,7 +113,9 @@ const CommandListPage: React.FC = () => {
                   Liste des commandes{" "}
                   <IonIcon icon={clipboardOutline} slot="start" />
                 </IonBreadcrumb>
-                <IonBreadcrumb>{commandes.length} commandes</IonBreadcrumb>
+                <IonBreadcrumb>
+                  {filteredCommandes.length} commandes
+                </IonBreadcrumb>
               </IonBreadcrumbs>
             </IonCol>
           </IonRow>
@@ -84,22 +123,48 @@ const CommandListPage: React.FC = () => {
 
         <IonRow className="ion-margin-top">
           <IonCol>
-            <IonLabel>Type de commande</IonLabel>
-            <IonSegment>
-              <IonSegmentButton value="PENDING">
+            <IonLabel className="ion-margin">Type de commande</IonLabel>
+
+            <IonRow>
+              <IonCol>
+                <IonSearchbar
+                  placeholder="Rechercher une commande"
+                  value={searchText}
+                  onIonInput={(e) => handleSearchChange(e.detail.value!)}
+                />
+              </IonCol>
+            </IonRow>
+
+            <IonSegment
+              value={paymentStatus}
+              onIonChange={(e) =>
+                handleCommandTypeChange(e.detail.value as PaymentStatusEnum)
+              }
+            >
+              <IonSegmentButton value={PaymentStatusEnum.PENDING}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <IonIcon
-                    icon={clipboardSharp}
+                    icon={hourglassOutline}
                     style={{ marginRight: "8px", color: "#000" }}
                   />
-                  <IonLabel>En attente de paiement</IonLabel>
+                  <IonLabel>En attente</IonLabel>
                 </div>
               </IonSegmentButton>
 
-              <IonSegmentButton value="PAID">
+              <IonSegmentButton value={PaymentStatusEnum.ALL}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <IonIcon
-                    icon={partlySunnyOutline}
+                    icon={listOutline}
+                    style={{ marginRight: "8px", color: "#000" }}
+                  />
+                  <IonLabel>Tout afficher</IonLabel>
+                </div>
+              </IonSegmentButton>
+
+              <IonSegmentButton value={PaymentStatusEnum.PAID}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <IonIcon
+                    icon={checkmarkCircleOutline}
                     style={{ marginRight: "8px", color: "#000" }}
                   />
                   <IonLabel>Payé</IonLabel>
@@ -110,9 +175,17 @@ const CommandListPage: React.FC = () => {
         </IonRow>
 
         <CommandList
-          commandes={commandes}
+          commandes={filteredCommandes}
           onCommandSelect={handleCommandSelect}
         />
+
+        <IonContent>
+          {/* Autres éléments de la page */}
+
+          <div className="ion-margin-top">
+            <CommandListTotal totalRevenue={sumTotalPrice()} />
+          </div>
+        </IonContent>
       </IonContent>
       <IonLoading isOpen={showLoading} message={"Veuillez patienter..."} />
     </IonPage>

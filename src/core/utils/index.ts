@@ -20,10 +20,11 @@ export const generateUniqueId = () => {
   return uniqueId;
 };
 
-export const formatTime = (
-  isoDate: string | number | Date | dayjs.Dayjs | null | undefined
+export const formatDate = (
+  isoDate: string | number | Date | dayjs.Dayjs | null | undefined,
+  forma: string = "DD/MM/YY hh:mm"
 ) => {
-  return dayjs(isoDate).format("dddd D MMMM YYYY - HH:mm");
+  return dayjs(isoDate).format(forma);
 };
 
 export const calculateElapsedTime = (
@@ -38,12 +39,12 @@ export const calculateElapsedTime = (
   const daysDiff = end.diff(start, "day");
 
   if (daysDiff > 0) {
-    return `${daysDiff} jour${daysDiff > 1 ? "s" : ""} ago`;
+    return `${daysDiff} jour${daysDiff > 1 ? "s" : ""}`;
   } else if (hoursDiff > 0) {
-    return `${hoursDiff} heure${hoursDiff > 1 ? "s" : ""} ago`;
+    return `${hoursDiff} h`;
   } else if (minutesDiff > 0) {
-    return `${minutesDiff} minute${minutesDiff > 1 ? "s" : ""} ago`;
+    return `${minutesDiff} min`;
   } else {
-    return `${secondsDiff} seconde${secondsDiff > 1 ? "s" : ""} ago`;
+    return `${secondsDiff} s`;
   }
 };

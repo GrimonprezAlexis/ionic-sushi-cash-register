@@ -1,6 +1,6 @@
 import React from "react";
 import { IonIcon } from "@ionic/react";
-import { Product, SelectedProductIds, SelectedProducts } from "../core/types";
+import { Product, SelectedProductIds } from "../core/types";
 import { checkmark } from "ionicons/icons";
 import {
   StyledListProduct,

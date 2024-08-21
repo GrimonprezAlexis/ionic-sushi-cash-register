@@ -1,8 +1,11 @@
 import {
+  IonBadge,
   IonBreadcrumb,
   IonBreadcrumbs,
   IonButton,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
   IonIcon,
   IonItem,
@@ -10,21 +13,26 @@ import {
   IonList,
   IonLoading,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Commande } from "../core/types";
-import { getCommandeById } from "../services/commandService";
-import { formatTime } from "../core/utils";
+import { Commande, LabelPaymentStatusEnum } from "../core/types";
+import { getCommandeById, printCommande } from "../services/commandService";
+import { formatDate } from "../core/utils";
 import {
   arrowBackOutline,
   cashOutline,
   cardOutline,
   calendarOutline,
   receiptOutline,
+  tabletLandscape,
+  pricetagOutline,
+  statsChart,
+  addOutline,
 } from "ionicons/icons";
 
 interface RouteParams {
@@ -64,6 +72,10 @@ const CommandDetailPage: FC = () => {
     router.push(url);
   };
 
+  const printDetailCommande = (detailCommande: Commande) => {
+    printCommande(detailCommande);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -88,7 +100,7 @@ const CommandDetailPage: FC = () => {
               <IonItem>
                 <IonIcon icon={calendarOutline} slot="start" />
                 <IonLabel>
-                  Date : {formatTime(detailCommande.isoDateCommande)}
+                  Date : {formatDate(detailCommande.isoDateCommande)}
                 </IonLabel>
               </IonItem>
 
@@ -107,8 +119,20 @@ const CommandDetailPage: FC = () => {
               </IonItem>
 
               <IonItem>
+                <IonIcon icon={tabletLandscape} slot="start" />
                 <IonLabel>Table : {detailCommande.tableNumber}</IonLabel>
+              </IonItem>
+
+              <IonItem>
+                <IonIcon icon={pricetagOutline} slot="start" />
                 <IonLabel>Total : {detailCommande.totalPrice} €</IonLabel>
+              </IonItem>
+
+              <IonItem>
+                <IonIcon icon={statsChart} slot="start" />
+                <IonBadge>
+                  {LabelPaymentStatusEnum[detailCommande.paymentStatus]}
+                </IonBadge>
               </IonItem>
 
               {detailCommande.paymentMean && (
@@ -130,6 +154,14 @@ const CommandDetailPage: FC = () => {
                 </IonItem>
               )}
             </IonList>
+            <IonButton
+              expand="block"
+              className="ion-margin"
+              onClick={() => printDetailCommande(detailCommande)}
+            >
+              <IonIcon icon={addOutline} slot="start" />
+              Imprimer la commande
+            </IonButton>
           </>
         ) : (
           <p>Aucune commande trouvée.</p>

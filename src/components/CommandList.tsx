@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { Commande, EtatCommandeEnum } from "../core/types";
+import {
+  Commande,
+  EtatCommandeEnum,
+  LabelPaymentStatusEnum,
+  PaymentStatusEnum,
+} from "../core/types";
 import {
   IonList,
   IonItem,
@@ -23,7 +28,7 @@ import {
   eyeOffOutline,
   eyeSharp,
 } from "ionicons/icons";
-import { calculateElapsedTime, formatTime } from "../core/utils";
+import { calculateElapsedTime, formatDate } from "../core/utils";
 
 interface CommandListProps {
   commandes: Commande[];
@@ -60,18 +65,20 @@ const CommandList: React.FC<CommandListProps> = ({
                 <IonCol size="auto">
                   <IonBadge
                     color={
-                      commande.etat === EtatCommandeEnum.CONFIRMED
+                      commande.paymentStatus === PaymentStatusEnum.PENDING
+                        ? "warning"
+                        : commande.paymentStatus === PaymentStatusEnum.PAID
                         ? "success"
-                        : "warning"
+                        : "default"
                     }
                   >
-                    {commande.etat}
+                    {LabelPaymentStatusEnum[commande.paymentStatus]}
                   </IonBadge>
                 </IonCol>
                 <IonCol>
                   <IonLabel>
-                    <h2>Commande #{commande.idCommande}</h2>
-                    <IonNote>{formatTime(commande.isoDateCommande)}</IonNote>
+                    Le {formatDate(commande.isoDateCommande, "DD/MM/YY")} à{" "}
+                    {formatDate(commande.isoDateCommande, "HH:mm")}
                     <IonNote style={{ margin: 8 }}>-</IonNote>
                     <IonNote color={"primary"}>{commande.totalPrice}€</IonNote>
                   </IonLabel>
