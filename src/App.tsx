@@ -36,6 +36,7 @@ import MainLayout from "./layouts/MainLayout";
 // Store import
 import store from "./store";
 import ErrorPage from "./pages/ErrorPage";
+import CompleteCommand from "./pages/ExtendCommand/ExtendCommand";
 
 setupIonicReact();
 
@@ -54,6 +55,11 @@ const App: React.FC = () => (
                 exact
                 path="/command/list/:id"
                 component={CommandDetailPage}
+              />
+              <Route
+                exact
+                path="/extend-command/:id"
+                component={CompleteCommand}
               />
               <Route
                 exact

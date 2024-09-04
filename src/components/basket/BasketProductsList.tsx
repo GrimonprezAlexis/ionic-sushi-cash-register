@@ -11,13 +11,13 @@ import {
 } from "@ionic/react";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Product, SelectedProducts } from "../../core/types";
 import { RootState } from "../../store";
 import {
   setSelectedBasketItem,
   setSelectedProductIds,
   setSelectedProducts,
 } from "../../store/actions";
-import { Product, SelectedProductIds } from "../../core/types";
 
 const BasketProductsList: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const BasketProductsList: React.FC = () => {
   const selectedProducts = useSelector(
     (state: RootState) => state.command.selectedProducts
   );
-  const onSelectBasketItem = (selectedBasketItem: Product) => {
+  const onSelectBasketItem = (selectedBasketItem: any) => {
     dispatch(setSelectedBasketItem(selectedBasketItem));
   };
 

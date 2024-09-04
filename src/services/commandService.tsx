@@ -49,3 +49,13 @@ export const printCommande = async (context: any) => {
     return e && e.response?.data ? e.response.data : e.message;
   }
 };
+
+export const extendCommandId = async (id: string, context: any) => {
+  try {
+    const res = await axios.post(`${apiUrl}/v1/commande/${id}/extend`, context);
+    return res.data;
+  } catch (e: any) {
+    console.log(e);
+    return e?.response?.data ?? e.message;
+  }
+};

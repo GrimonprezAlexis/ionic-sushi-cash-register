@@ -14,13 +14,14 @@ import {
   IonLoading,
   IonPage,
   IonRow,
+  IonText,
   IonTitle,
   IonToolbar,
   useIonRouter,
 } from "@ionic/react";
 import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Commande, LabelPaymentStatusEnum } from "../core/types";
+import { Commande, LabelPaymentStatusEnum, RouteParams } from "../core/types";
 import { getCommandeById, printCommande } from "../services/commandService";
 import { formatDate } from "../core/utils";
 import {
@@ -34,10 +35,6 @@ import {
   statsChart,
   addOutline,
 } from "ionicons/icons";
-
-interface RouteParams {
-  id: string;
-}
 
 const CommandDetailPage: FC = () => {
   const router = useIonRouter();
@@ -74,6 +71,10 @@ const CommandDetailPage: FC = () => {
 
   const printDetailCommande = (detailCommande: Commande) => {
     printCommande(detailCommande);
+  };
+
+  const extendCommande = (detailCommande: Commande) => {
+    navigateToUrl(`/extend-command/${detailCommande.idCommande}`);
   };
 
   return (
@@ -153,6 +154,27 @@ const CommandDetailPage: FC = () => {
                   </IonLabel>
                 </IonItem>
               )}
+
+              <IonList>
+                {detailCommande.products.map((product, index) => (
+                  <IonItem key={index} lines="none">
+                    <IonLabel>
+                      <IonText style={{ fontSize: "0.9em", color: "#ffffff" }}>
+                        <strong>(x{product.quantity})</strong> {product.name}
+                      </IonText>
+                      <IonText
+                        style={{
+                          fontSize: "0.75em",
+                          color: "#cccccc",
+                          display: "block",
+                        }}
+                      >
+                        {product.category} - {product.price.toFixed(2)}€
+                      </IonText>
+                    </IonLabel>
+                  </IonItem>
+                ))}
+              </IonList>
             </IonList>
             <IonButton
               expand="block"
@@ -161,6 +183,15 @@ const CommandDetailPage: FC = () => {
             >
               <IonIcon icon={addOutline} slot="start" />
               Imprimer la commande
+            </IonButton>
+            <IonButton
+              color="warning"
+              expand="block"
+              className="ion-margin"
+              onClick={() => extendCommande(detailCommande)}
+            >
+              <IonIcon icon={addOutline} slot="start" />
+              Completer ou Modifier la commande
             </IonButton>
           </>
         ) : (

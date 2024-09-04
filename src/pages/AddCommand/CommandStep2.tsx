@@ -1,22 +1,21 @@
 import {
   IonBreadcrumb,
   IonBreadcrumbs,
+  IonCol,
   IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
-  IonHeader,
-  IonGrid,
-  IonRow,
-  IonCol,
-  IonButton,
-  IonIcon,
   useIonRouter,
 } from "@ionic/react";
-import { arrowForwardOutline, restaurantOutline } from "ionicons/icons";
+import { restaurantOutline } from "ionicons/icons";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import categoriesData from "../../assets/json/categories.json";
@@ -24,11 +23,7 @@ import productsData from "../../assets/json/products.json";
 import Basket from "../../components/basket/Basket";
 import CategoryList from "../../components/CategoryList";
 import ProductList from "../../components/ProductList";
-import {
-  Product,
-  SelectedProductIds,
-  SelectedProducts,
-} from "../../core/types";
+import { Product } from "../../core/types";
 import { RootState } from "../../store";
 import {
   setSelectedCategory,
@@ -140,7 +135,12 @@ const AddCommandStep2: React.FC = () => {
               <IonList>
                 <CategoryList
                   categories={categoriesData}
-                  selectedCategory={selectedCategory}
+                  selectedCategories={
+                    selectedProducts.map(
+                      (product: Product) => product.category
+                    ) || []
+                  } // Map the categories from the basket
+                  currentCategory={selectedCategory}
                   onCategorySelect={handleCategorySelect}
                 />
               </IonList>

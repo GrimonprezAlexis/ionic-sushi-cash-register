@@ -73,7 +73,11 @@ const CommandList: React.FC<CommandListProps> = ({
         <IonItemGroup key={date}>
           <IonItemDivider
             sticky
-            style={{ backgroundColor: "#1c1c1c", padding: "4px 16px" }}
+            style={{
+              backgroundColor: "whitesmoke",
+              marginTop: "1rem",
+              padding: "4px 16px",
+            }}
           >
             <IonLabel
               color="primary"

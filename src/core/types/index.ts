@@ -8,6 +8,10 @@ export interface Product {
   quantity?: number;
 }
 
+export interface SelectedProducts extends Product {
+  quantity: number;
+}
+
 export interface SelectedProductIds {
   id: number;
 }
@@ -51,4 +55,8 @@ export enum EtatCommandeEnum {
 export enum LabelEtatCommandeEnum {
   CONFIRMED = "Commande confirmé",
   SERVED = "Commande servie",
+}
+
+export interface RouteParams {
+  id: string;
 }

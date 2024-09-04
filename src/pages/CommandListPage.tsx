@@ -34,7 +34,7 @@ const CommandListPage: React.FC = () => {
   const [commandes, setCommandes] = useState<Commande[]>([]);
   const [filteredCommandes, setFilteredCommandes] = useState<Commande[]>([]);
   const [paymentStatus, setPaymenStatus] = useState<PaymentStatusEnum>(
-    PaymentStatusEnum.PENDING
+    PaymentStatusEnum.ALL
   );
   const [searchText, setSearchText] = useState<string>("");
 

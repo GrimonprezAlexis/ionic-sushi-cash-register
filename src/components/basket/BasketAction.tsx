@@ -9,22 +9,32 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Commande,
   EtatCommandeEnum,
   PaymentStatusEnum,
+  Product,
   SelectedProducts,
 } from "../../core/types";
 import { generateUniqueId } from "../../core/utils";
-import { addCommande } from "../../services/commandService";
+import { addCommande, extendCommandId } from "../../services/commandService";
 import { RootState } from "../../store";
+import { body } from "ionicons/icons";
 
 const BasketAction: React.FC = () => {
   const orderType = useSelector((state: RootState) => state.command.orderType);
   const selectedProducts = useSelector(
     (state: RootState) => state.command.selectedProducts
   );
+  const isCommandExtend = useSelector(
+    (state: RootState) => state.command.isCommandExtend
+  );
+
+  const detailCommand = useSelector(
+    (state: RootState) => state.command.detailCommand
+  );
+
   const [showLoading, setShowLoading] = useState(false);
   const [showToast, setShowToast] = useState<{
     isOpen: boolean;
@@ -40,8 +50,18 @@ const BasketAction: React.FC = () => {
     const totalPrice = products.reduce((total, product) => {
       return total + product.price * product.quantity;
     }, 0);
-
     return Math.round(totalPrice * 100) / 100;
+  };
+
+  const handleCommandExtend = async () => {
+    setShowLoading(true);
+    const res = await extendCommandId(detailCommand.idCommande, {
+      extendProducts: selectedProducts,
+    });
+    setShowLoading(false);
+
+    console.log("res", res);
+    stateHandler(res);
   };
 
   const handleNewCommand = async () => {
@@ -62,7 +82,10 @@ const BasketAction: React.FC = () => {
     setShowLoading(false);
 
     console.log("res", res);
+    stateHandler(res);
+  };
 
+  const stateHandler = (res: any) => {
     if (res?.success) {
       setShowToast({ isOpen: true, message: "Commande ajoutée avec succès" });
       router.push(`/command/list/${res.data.id}`);
@@ -102,7 +125,7 @@ const BasketAction: React.FC = () => {
       </IonCol>
       <IonCol size="6">
         <IonButton
-          onClick={handleNewCommand}
+          onClick={isCommandExtend ? handleCommandExtend : handleNewCommand}
           disabled={selectedProducts.length === 0}
           color="primary"
         >
