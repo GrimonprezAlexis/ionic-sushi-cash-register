@@ -30,6 +30,7 @@ import {
   eyeSharp,
   chevronDownOutline,
   chevronUpOutline,
+  calendarOutline,
 } from "ionicons/icons";
 import { calculateElapsedTime, formatDate } from "../core/utils";
 
@@ -83,6 +84,13 @@ const CommandList: React.FC<CommandListProps> = ({
               color="primary"
               style={{ fontSize: "1em", fontWeight: "bold" }}
             >
+              <IonIcon
+                icon={calendarOutline}
+                style={{
+                  marginLeft: "8px",
+                  verticalAlign: "middle",
+                }}
+              />{" "}
               {date}
             </IonLabel>
           </IonItemDivider>
@@ -92,6 +100,7 @@ const CommandList: React.FC<CommandListProps> = ({
                 <IonItem
                   slot="header"
                   lines="full"
+                  title={commande.idCommande}
                   style={{
                     padding: "8px 16px",
                     display: "flex",
@@ -100,7 +109,28 @@ const CommandList: React.FC<CommandListProps> = ({
                 >
                   <IonGrid style={{ padding: "0" }}>
                     <IonRow className="ion-align-items-center">
-                      <IonCol size="auto">
+                      <IonIcon
+                        icon={getOrderTypeIcon(commande.orderType.type)}
+                        style={{
+                          marginLeft: "8px",
+                          verticalAlign: "middle",
+                          fontSize: "1.2rem",
+                        }}
+                      />
+
+                      <IonCol
+                        size="auto"
+                        style={{ gap: ".3rem", display: "flex" }}
+                      >
+                        {commande.tableNumber && (
+                          <IonBadge
+                            color="tertiary"
+                            style={{ fontSize: "0.85em" }}
+                          >
+                            Table {commande.tableNumber}
+                          </IonBadge>
+                        )}
+
                         <IonBadge
                           color={
                             commande.paymentStatus === PaymentStatusEnum.PENDING
@@ -120,13 +150,6 @@ const CommandList: React.FC<CommandListProps> = ({
                           style={{ fontSize: "1em", fontWeight: "bold" }}
                         >
                           {formatDate(commande.isoDateCommande, "HH:mm")}
-                          <IonIcon
-                            icon={getOrderTypeIcon(commande.orderType.type)}
-                            style={{
-                              marginLeft: "8px",
-                              verticalAlign: "middle",
-                            }}
-                          />
                         </IonLabel>
                       </IonCol>
                     </IonRow>
@@ -177,16 +200,6 @@ const CommandList: React.FC<CommandListProps> = ({
                         {calculateElapsedTime(commande.isoDateCommande)}
                       </IonText>
                     </IonItem>
-                    {commande.tableNumber && (
-                      <IonItem style={{ padding: "4px 0" }}>
-                        <IonBadge
-                          color="tertiary"
-                          style={{ fontSize: "0.85em" }}
-                        >
-                          Table {commande.tableNumber}
-                        </IonBadge>
-                      </IonItem>
-                    )}
                   </IonList>
                 </div>
               </IonAccordion>
