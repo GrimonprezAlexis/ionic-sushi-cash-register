@@ -77,6 +77,10 @@ const CommandDetailPage: FC = () => {
     navigateToUrl(`/extend-command/${detailCommande.idCommande}`);
   };
 
+  const paidCommande = (detailCommande: Commande) => {
+    navigateToUrl(`/paid-command/${detailCommande.idCommande}`);
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -192,6 +196,16 @@ const CommandDetailPage: FC = () => {
             >
               <IonIcon icon={addOutline} slot="start" />
               Completer ou Modifier la commande
+            </IonButton>
+
+            <IonButton
+              color="success"
+              expand="block"
+              className="ion-margin"
+              onClick={() => paidCommande(detailCommande)}
+            >
+              <IonIcon icon={addOutline} slot="start" />
+              Régler la commande
             </IonButton>
           </>
         ) : (
