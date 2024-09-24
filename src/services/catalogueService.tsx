@@ -51,3 +51,13 @@ export const getCatalogue = async () => {
     return error?.response?.data ?? error.message;
   }
 };
+
+export const getCatalogueGrouped = async () => {
+  try {
+    const res = await axios.get(`${apiUrl}/v1/catalogue/grouped-category`);
+    return res.data;
+  } catch (error: any) {
+    console.error(error);
+    return error?.response?.data ?? error.message;
+  }
+};

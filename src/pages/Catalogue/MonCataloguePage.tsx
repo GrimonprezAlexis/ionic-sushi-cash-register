@@ -14,24 +14,45 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonAccordion,
+  IonAccordionGroup,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { getCatalogue } from "../../services/catalogueService";
-import { refreshOutline } from "ionicons/icons";
+import {
+  getCatalogue,
+  getCatalogueGrouped,
+} from "../../services/catalogueService";
+import {
+  refreshOutline,
+  chevronDownOutline,
+  chevronUpOutline,
+} from "ionicons/icons";
+import { Product } from "../../core/types";
 
 const MonCataloguePage: React.FC = () => {
   const [showLoading, setShowLoading] = useState(false);
-  const [catalogues, setCatalogues] = useState<any[]>([]);
+  const [catalogueData, setCatalogueData] = useState<any>({}); // To store grouped categories
+  const [openAccordions, setOpenAccordions] = useState<string[]>([]); // Track opened accordions
 
   const fetchCatalogues = async () => {
     try {
       setShowLoading(true);
-      const { data } = await getCatalogue();
+      const { data } = await getCatalogueGrouped();
       setShowLoading(false);
-      setCatalogues(data.products);
+      setCatalogueData(data.catalogue); // Store the grouped categories data
+      // Open all categories by default
+      setOpenAccordions(Object.keys(data.catalogue));
     } catch (error) {
-      console.error("Error fetching commandes", error);
+      console.error("Error fetching catalogues", error);
       setShowLoading(false);
+    }
+  };
+
+  const toggleAccordion = (category: string) => {
+    if (openAccordions.includes(category)) {
+      setOpenAccordions(openAccordions.filter((c) => c !== category));
+    } else {
+      setOpenAccordions([...openAccordions, category]);
     }
   };
 
@@ -46,31 +67,42 @@ const MonCataloguePage: React.FC = () => {
           Rafraîchir les catalogues
         </IonButton>
 
-        {catalogues.length > 0 ? (
-          <IonList>
-            {catalogues.map((product) => (
-              <IonItem key={product.id}>
-                {/* <IonThumbnail slot="start">
-                  <img src={product.photo} alt={product.name} />
-                </IonThumbnail> */}
-                <IonLabel>
-                  <IonGrid>
-                    <IonRow>
-                      <IonCol size="9">
-                        <h2>
-                          {product.icon} {product.name}
-                        </h2>
-                        <p>Catégorie : {product.category}</p>
-                      </IonCol>
-                      <IonCol size="3" className="ion-text-right">
-                        <h2>{product.price.toFixed(2)} €</h2>
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </IonLabel>
-              </IonItem>
+        {Object.keys(catalogueData).length > 0 ? (
+          <IonAccordionGroup>
+            {Object.entries(catalogueData).map(([category, products]: any) => (
+              <IonAccordion key={category} value={category}>
+                <IonItem
+                  slot="header"
+                  color="light"
+                  onClick={() => toggleAccordion(category)}
+                >
+                  <IonLabel>{category}</IonLabel>
+                </IonItem>
+                <div className="ion-padding" slot="content">
+                  <IonList>
+                    {products.map((product: Product) => (
+                      <IonItem key={product.id || "🍣"}>
+                        <span>{product?.icon}</span>
+                        <IonLabel>
+                          <IonGrid>
+                            <IonRow>
+                              <IonCol size="9">
+                                <h3>{product.name}</h3>
+                                <p>Prix : {product.price.toFixed(2)} €</p>
+                              </IonCol>
+                              <IonCol size="3" className="ion-text-right">
+                                <h2>{product.price.toFixed(2)} €</h2>
+                              </IonCol>
+                            </IonRow>
+                          </IonGrid>
+                        </IonLabel>
+                      </IonItem>
+                    ))}
+                  </IonList>
+                </div>
+              </IonAccordion>
             ))}
-          </IonList>
+          </IonAccordionGroup>
         ) : (
           <IonText>Aucun produit disponible pour le moment.</IonText>
         )}
