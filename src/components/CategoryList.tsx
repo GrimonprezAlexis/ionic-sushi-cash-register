@@ -20,16 +20,22 @@ const CategoryList: React.FC<CategoryListProps> = ({
   return (
     <StyledWrapperCategories>
       {categories.map((category) => {
-        let backgroundColor = "rgb(58 32 32)"; // Default color
+        // Default styles
+        let backgroundColor = "var(--ion-color-light)";
+        let textColor = "var(--ion-color-dark)";
+        let border = "1px solid var(--ion-color-medium)";
 
-        // If the category is in the basket (selectedCategories array)
+        // Category selected
         if (selectedCategories.includes(category)) {
-          backgroundColor = "rgb(58 77 63)";
+          backgroundColor = "var(--ion-color-primary)";
+          textColor = "var(--ion-color-light)";
         }
 
-        // If the category is the current active one
+        // Category currently active
         if (currentCategory === category) {
-          backgroundColor = "blue";
+          backgroundColor = "var(--ion-color-primary-shade)";
+          textColor = "var(--ion-color-light)";
+          border = "2px solid var(--ion-color-primary)";
         }
 
         return (
@@ -38,6 +44,11 @@ const CategoryList: React.FC<CategoryListProps> = ({
             style={{
               fontWeight: currentCategory === category ? "bold" : "normal",
               backgroundColor,
+              color: textColor,
+              border,
+              transition:
+                "background-color 0.3s ease, color 0.3s ease, border 0.3s ease",
+              cursor: "pointer",
             }}
             onClick={() => onCategorySelect(category)}
           >

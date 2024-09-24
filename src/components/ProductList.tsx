@@ -50,9 +50,8 @@ const ProductList: React.FC<ProductListProps> = ({
           >
             <StyledProductSquare>
               <StyledProductName>
-                {product.name} - {product.id}
+                {product.name} - {product.category}
               </StyledProductName>
-
               <StyledStyledProductPriceIcon>
                 <StyledProductPrice>
                   {product.price.toFixed(2)}€

@@ -16,11 +16,11 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { restaurantOutline } from "ionicons/icons";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import categoriesData from "../../assets/json/categories.json";
-import productsData from "../../assets/json/products.json";
+// import categoriesData from "../../assets/json/categories.json";
+// import productsData from "../../assets/json/products.json";
 import Basket from "../../components/basket/Basket";
 import CategoryList from "../../components/CategoryList";
 import ProductList from "../../components/ProductList";
@@ -34,12 +34,21 @@ import {
   setSelectedProductIds,
   setSelectedProducts,
 } from "../../store/actions";
+import { getCategories } from "../../services/categorieService";
+import { getCatalogue } from "../../services/catalogueService";
 
 const ExtendCommand: React.FC = () => {
   const dispatch = useDispatch();
   const router = useIonRouter();
   const { id } = useParams<RouteParams>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [productsData, setProductsData] = useState<Product[]>([]);
+  const [categoriesData, setCategoriesData] = useState<string[]>([]);
+  const didFetchData = useRef({
+    catalogues: true,
+    categories: true,
+    detailCommand: true,
+  });
 
   const selectedCategory = useSelector(
     (state: RootState) => state.command.selectedCategory
@@ -70,7 +79,20 @@ const ExtendCommand: React.FC = () => {
       }
     };
 
-    fetchDetailCommand();
+    if (productsData.length === 0 && didFetchData.current.categories) {
+      didFetchData.current.categories = false;
+      fetchCatalogues();
+    }
+
+    if (categoriesData.length === 0 && didFetchData.current.catalogues) {
+      didFetchData.current.catalogues = false;
+      fetchCategories();
+    }
+
+    if (didFetchData.current.detailCommand) {
+      didFetchData.current.detailCommand = false;
+      fetchDetailCommand();
+    }
   }, [id]);
 
   const dispatchData = (data: Commande) => {
@@ -112,6 +134,32 @@ const ExtendCommand: React.FC = () => {
       ])
     );
     dispatch(setSelectedProducts([...selectedProducts, product]));
+  };
+
+  const fetchCatalogues = async () => {
+    try {
+      setLoading(true);
+      const { data } = await getCatalogue();
+      setLoading(false);
+      setProductsData(data.products);
+      didFetchData.current.categories = false;
+    } catch (error) {
+      console.error("Error fetching catalogue", error);
+      setLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const { data } = await getCategories();
+      setLoading(false);
+      setCategoriesData(data.categories);
+      didFetchData.current.categories = false;
+    } catch (error) {
+      console.error("Error fetching categories", error);
+      setLoading(false);
+    }
   };
 
   return (

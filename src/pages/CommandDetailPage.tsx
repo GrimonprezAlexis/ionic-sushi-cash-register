@@ -161,15 +161,32 @@ const CommandDetailPage: FC = () => {
 
               <IonList>
                 {detailCommande.products.map((product, index) => (
-                  <IonItem key={index} lines="none">
+                  <IonItem
+                    key={index}
+                    lines="full"
+                    style={{ marginBottom: "10px" }}
+                  >
+                    {/* Ajout d'une icône si disponible */}
+                    {product.icon && (
+                      <div style={{ marginRight: "10px", fontSize: "1.5em" }}>
+                        {product.icon}
+                      </div>
+                    )}
                     <IonLabel>
-                      <IonText style={{ fontSize: "0.9em", color: "#ffffff" }}>
-                        <strong>(x{product.quantity})</strong> {product.name}
-                      </IonText>
+                      {/* Nom du produit avec quantité en gras */}
                       <IonText
                         style={{
-                          fontSize: "0.75em",
-                          color: "#cccccc",
+                          fontSize: "1em",
+                          color: "var(--ion-color-primary)",
+                        }}
+                      >
+                        <strong>(x{product.quantity})</strong> {product.name}
+                      </IonText>
+                      {/* Catégorie et prix */}
+                      <IonText
+                        style={{
+                          fontSize: "0.85em",
+                          color: "var(--ion-color-medium)",
                           display: "block",
                         }}
                       >

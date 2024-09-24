@@ -41,3 +41,13 @@ export const downloadExempleMenuXls = async () => {
     console.error("Error downloading the file:", error);
   }
 };
+
+export const getCatalogue = async () => {
+  try {
+    const res = await axios.get(`${apiUrl}/v1/catalogue`);
+    return res.data;
+  } catch (error: any) {
+    console.error(error);
+    return error?.response?.data ?? error.message;
+  }
+};

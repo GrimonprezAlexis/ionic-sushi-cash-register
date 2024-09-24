@@ -9,6 +9,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
+  IonLoading,
   IonPage,
   IonRow,
   IonTitle,
@@ -16,10 +17,10 @@ import {
   useIonRouter,
 } from "@ionic/react";
 import { restaurantOutline } from "ionicons/icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import categoriesData from "../../assets/json/categories.json";
-import productsData from "../../assets/json/products.json";
+// import categoriesData from "../../assets/json/categories.json";
+// import productsData from "../../assets/json/products.json";
 import Basket from "../../components/basket/Basket";
 import CategoryList from "../../components/CategoryList";
 import ProductList from "../../components/ProductList";
@@ -30,10 +31,15 @@ import {
   setSelectedProductIds,
   setSelectedProducts,
 } from "../../store/actions";
+import { getCatalogue } from "../../services/catalogueService";
+import { getCategories } from "../../services/categorieService";
 
 const AddCommandStep2: React.FC = () => {
   const dispatch = useDispatch();
   const router = useIonRouter();
+  const [showLoading, setShowLoading] = useState(false);
+  const [productsData, setProductsData] = useState<Product[]>([]);
+  const [categoriesData, setCategoriesData] = useState<string[]>([]);
 
   const orderType = useSelector((state: RootState) => state.command.orderType);
 
@@ -47,9 +53,22 @@ const AddCommandStep2: React.FC = () => {
     (state: RootState) => state.command.selectedCategory
   );
 
+  const didFetchData = useRef({
+    catalogues: true,
+    categories: true,
+  });
+
   useEffect(() => {
     if (!orderType) navigateToUrl("/command/1");
-  }, [selectedProductIds]);
+    if (productsData.length === 0 && didFetchData.current.categories) {
+      didFetchData.current.categories = false;
+      fetchCatalogues();
+    }
+    if (categoriesData.length === 0 && didFetchData.current.catalogues) {
+      didFetchData.current.catalogues = false;
+      fetchCategories();
+    }
+  }, [productsData.length, categoriesData.length, selectedProductIds]);
 
   const handleCategorySelect = (category: string) => {
     dispatch(setSelectedCategory(category));
@@ -67,6 +86,30 @@ const AddCommandStep2: React.FC = () => {
       ])
     );
     dispatch(setSelectedProducts([...selectedProducts, product]));
+  };
+
+  const fetchCatalogues = async () => {
+    try {
+      setShowLoading(true);
+      const { data } = await getCatalogue();
+      setShowLoading(false);
+      setProductsData(data.products);
+    } catch (error) {
+      console.error("Error fetching catalogue", error);
+      setShowLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      setShowLoading(true);
+      const { data } = await getCategories();
+      setShowLoading(false);
+      setCategoriesData(data.categories);
+    } catch (error) {
+      console.error("Error fetching categories", error);
+      setShowLoading(false);
+    }
   };
 
   const getFilteredProducts = () => {
@@ -147,6 +190,7 @@ const AddCommandStep2: React.FC = () => {
             </IonCol>
           </IonRow>
         </IonGrid>
+        <IonLoading isOpen={showLoading} message={"Veuillez patienter..."} />
       </IonContent>
     </IonPage>
   );
