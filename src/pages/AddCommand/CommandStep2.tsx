@@ -37,7 +37,7 @@ import { getCategories } from "../../services/categorieService";
 const AddCommandStep2: React.FC = () => {
   const dispatch = useDispatch();
   const router = useIonRouter();
-  const [showLoading, setShowLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState<Product[]>([]);
   const [categoriesData, setCategoriesData] = useState<string[]>([]);
 
@@ -90,25 +90,25 @@ const AddCommandStep2: React.FC = () => {
 
   const fetchCatalogues = async () => {
     try {
-      setShowLoading(true);
+      setLoading(true);
       const { data } = await getCatalogue();
-      setShowLoading(false);
+      setLoading(false);
       setProductsData(data.products);
     } catch (error) {
       console.error("Error fetching catalogue", error);
-      setShowLoading(false);
+      setLoading(false);
     }
   };
 
   const fetchCategories = async () => {
     try {
-      setShowLoading(true);
+      setLoading(true);
       const { data } = await getCategories();
-      setShowLoading(false);
+      setLoading(false);
       setCategoriesData(data.categories);
     } catch (error) {
       console.error("Error fetching categories", error);
-      setShowLoading(false);
+      setLoading(false);
     }
   };
 
@@ -190,7 +190,7 @@ const AddCommandStep2: React.FC = () => {
             </IonCol>
           </IonRow>
         </IonGrid>
-        <IonLoading isOpen={showLoading} message={"Veuillez patienter..."} />
+        <IonLoading isOpen={loading} message={"Veuillez patienter..."} />
       </IonContent>
     </IonPage>
   );

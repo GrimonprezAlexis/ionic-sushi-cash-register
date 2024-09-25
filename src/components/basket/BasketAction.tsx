@@ -21,6 +21,7 @@ import { generateUniqueId } from "../../core/utils";
 import { addCommande, extendCommandId } from "../../services/commandService";
 import { RootState } from "../../store";
 import { body } from "ionicons/icons";
+import { handleRequest } from "../../core/handlers/handlerRequest";
 
 const BasketAction: React.FC = () => {
   const orderType = useSelector((state: RootState) => state.command.orderType);
@@ -35,7 +36,7 @@ const BasketAction: React.FC = () => {
     (state: RootState) => state.command.detailCommand
   );
 
-  const [showLoading, setShowLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState<{
     isOpen: boolean;
     message: string;
@@ -54,11 +55,11 @@ const BasketAction: React.FC = () => {
   };
 
   const handleCommandExtend = async () => {
-    setShowLoading(true);
+    setLoading(true);
     const res = await extendCommandId(detailCommand.idCommande, {
       extendProducts: selectedProducts,
     });
-    setShowLoading(false);
+    setLoading(false);
 
     console.log("res", res);
     stateHandler(res);
@@ -77,12 +78,22 @@ const BasketAction: React.FC = () => {
     };
 
     console.log("body", body);
-    setShowLoading(true);
-    const res = await addCommande(body);
-    setShowLoading(false);
-
-    console.log("res", res);
-    stateHandler(res);
+    setLoading(true);
+    await handleRequest(
+      () => addCommande(body), // Requête API
+      (res) => {
+        // En cas de succès
+        setLoading(false);
+        console.log("res", res);
+        setShowToast({ isOpen: true, message: "Commande ajoutée avec succès" });
+        router.push(`/command/list/${res.data.id}`);
+      },
+      (error) => {
+        // En cas d'erreur
+        setLoading(false);
+        setShowToast({ isOpen: true, message: `Erreur : ${error}` });
+      }
+    );
   };
 
   const stateHandler = (res: any) => {
@@ -133,7 +144,7 @@ const BasketAction: React.FC = () => {
         </IonButton>
       </IonCol>
 
-      <IonLoading isOpen={showLoading} message={"Veuillez patienter..."} />
+      <IonLoading isOpen={loading} message={"Veuillez patienter..."} />
     </IonCardContent>
   );
 };

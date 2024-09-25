@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Commande } from "../core/types";
+import { Commande, PaymentDetails } from "../core/types";
 
 const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -55,7 +55,23 @@ export const extendCommandId = async (id: string, context: any) => {
     const res = await axios.post(`${apiUrl}/v1/commande/${id}/extend`, context);
     return res.data;
   } catch (e: any) {
-    console.log(e);
+    console.log(e, "Error during extendCommandId");
+    return e?.response?.data ?? e.message;
+  }
+};
+
+export const payCommand = async (
+  commandeId: string,
+  paymentDetails: PaymentDetails
+) => {
+  try {
+    const response = await axios.post(
+      `${apiUrl}/v1/commande/${commandeId}/pay`,
+      paymentDetails
+    );
+    return response.data;
+  } catch (e: any) {
+    console.error("Error during payment:", e);
     return e?.response?.data ?? e.message;
   }
 };

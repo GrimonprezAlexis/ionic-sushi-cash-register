@@ -40,7 +40,7 @@ const CommandListPage: React.FC = () => {
 
   const router = useIonRouter();
   const history = useHistory();
-  const [showLoading, setShowLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const isMounted = useRef(false);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const CommandListPage: React.FC = () => {
 
   const getAllCommandes = async () => {
     try {
-      setShowLoading(true);
+      setLoading(true);
       const { data } = await getCommandes();
       const sortedData = data.sort((a: Commande, b: Commande) => {
         return (
@@ -60,12 +60,12 @@ const CommandListPage: React.FC = () => {
           new Date(a.isoDateCommande).getTime()
         );
       });
-      setShowLoading(false);
+      setLoading(false);
       setCommandes(sortedData);
       setFilteredCommandes(sortedData); // Initialize with all commandes
     } catch (error) {
       console.error("Error fetching commandes", error);
-      setShowLoading(false);
+      setLoading(false);
     }
   };
 
@@ -200,7 +200,7 @@ const CommandListPage: React.FC = () => {
           </div>
         </IonContent>
       </IonContent>
-      <IonLoading isOpen={showLoading} message={"Veuillez patienter..."} />
+      <IonLoading isOpen={loading} message={"Veuillez patienter..."} />
     </IonPage>
   );
 };

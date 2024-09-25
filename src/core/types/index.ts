@@ -27,12 +27,18 @@ export interface Commande {
   // TODO
   idClient?: string;
   paymentStatus: PaymentStatusEnum;
-  paymentMean?: "CASH" | "CB";
+  PaymentMethod?: PaymentMethodEnum;
 }
 
 export interface OrderType {
   type: "surplace" | "aemporter";
   location?: "INSIDE" | "OUTSIDE";
+}
+
+export enum PaymentMethodEnum {
+  CASH = "CASH",
+  CB = "CB",
+  MOBILE = "MOBILE",
 }
 
 export enum PaymentStatusEnum {
@@ -59,4 +65,10 @@ export enum LabelEtatCommandeEnum {
 
 export interface RouteParams {
   id: string;
+}
+
+export interface PaymentDetails {
+  products: Product[];
+  paymentMethod: PaymentMethodEnum;
+  totalPrice: number;
 }

@@ -78,7 +78,7 @@ const CommandDetailPage: FC = () => {
   };
 
   const paidCommande = (detailCommande: Commande) => {
-    navigateToUrl(`/paid-command/${detailCommande.idCommande}`);
+    navigateToUrl(`/pay-command/${detailCommande.idCommande}`);
   };
 
   return (
@@ -140,11 +140,11 @@ const CommandDetailPage: FC = () => {
                 </IonBadge>
               </IonItem>
 
-              {detailCommande.paymentMean && (
+              {detailCommande.PaymentMethod && (
                 <IonItem>
                   <IonIcon
                     icon={
-                      detailCommande.paymentMean === "CASH"
+                      detailCommande.PaymentMethod === "CASH"
                         ? cashOutline
                         : cardOutline
                     }
@@ -152,7 +152,7 @@ const CommandDetailPage: FC = () => {
                   />
                   <IonLabel>
                     Moyen de paiement :{" "}
-                    {detailCommande.paymentMean === "CASH"
+                    {detailCommande.PaymentMethod === "CASH"
                       ? "Espèces"
                       : "Carte Bancaire"}
                   </IonLabel>

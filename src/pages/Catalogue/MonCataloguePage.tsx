@@ -30,21 +30,21 @@ import {
 import { Product } from "../../core/types";
 
 const MonCataloguePage: React.FC = () => {
-  const [showLoading, setShowLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [catalogueData, setCatalogueData] = useState<any>({}); // To store grouped categories
   const [openAccordions, setOpenAccordions] = useState<string[]>([]); // Track opened accordions
 
   const fetchCatalogues = async () => {
     try {
-      setShowLoading(true);
+      setLoading(true);
       const { data } = await getCatalogueGrouped();
-      setShowLoading(false);
+      setLoading(false);
       setCatalogueData(data.catalogue); // Store the grouped categories data
       // Open all categories by default
       setOpenAccordions(Object.keys(data.catalogue));
     } catch (error) {
       console.error("Error fetching catalogues", error);
-      setShowLoading(false);
+      setLoading(false);
     }
   };
 
@@ -107,7 +107,7 @@ const MonCataloguePage: React.FC = () => {
           <IonText>Aucun produit disponible pour le moment.</IonText>
         )}
 
-        <IonLoading isOpen={showLoading} message={"Veuillez patienter..."} />
+        <IonLoading isOpen={loading} message={"Veuillez patienter..."} />
       </IonCardContent>
     </IonCard>
   );

@@ -1,0 +1,15 @@
+.ion-radio-group-payment-method {
+    display: flex;
+    flex-direction: row;
+    gap: 3rem;
+    justify-content: flex-start;
+}
+
+.selected-method {
+    border: 2px solid var(--ion-color-primary);
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.ion-card {
+    margin: 5px;
+}
