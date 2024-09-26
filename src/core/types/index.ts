@@ -13,7 +13,7 @@ export interface SelectedProducts extends Product {
 }
 
 export interface SelectedProductIds {
-  id: number;
+  id: string;
 }
 
 export interface Commande {

@@ -48,10 +48,9 @@ const CommandListSearchBar: React.FC<CommandListSearchBarProps> = ({
       <IonItem>
         <IonLabel>Date de commande</IonLabel>
         <IonDatetime
-          displayFormat="YYYY-MM-DD"
+          presentation="date"
           value={selectedDate}
           onIonChange={handleDateChange}
-          placeholder="Filtrer par date"
         ></IonDatetime>
         <IonButton
           fill="clear"
