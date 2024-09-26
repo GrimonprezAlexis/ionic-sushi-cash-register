@@ -13,3 +13,7 @@
 .ion-card {
     margin: 5px;
 }
+
+.is-already-paid-product {
+    text-decoration: line-through;
+}

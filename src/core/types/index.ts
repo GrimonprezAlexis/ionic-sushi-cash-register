@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   category: string;
   price: number;
@@ -28,6 +28,16 @@ export interface Commande {
   idClient?: string;
   paymentStatus: PaymentStatusEnum;
   PaymentMethod?: PaymentMethodEnum;
+  paidProducts?: ProductPay[];
+  paymentMethod?: PaymentMethodEnum;
+  totalPricePaid?: number;
+}
+
+export interface ProductPay {
+  id: string;
+  price: number;
+  quantity: number;
+  paymentMethod?: PaymentMethodEnum;
 }
 
 export interface OrderType {
@@ -43,12 +53,14 @@ export enum PaymentMethodEnum {
 
 export enum PaymentStatusEnum {
   PENDING = "PENDING",
+  PARTIALLY_PAID = "PARTIALLY_PAID",
   PAID = "PAID",
   ALL = "ALL",
 }
 
 export enum LabelPaymentStatusEnum {
   PENDING = "A régler",
+  PARTIALLY_PAID = "Partiellement payé",
   PAID = "Terminé",
   ALL = "Tout",
 }
