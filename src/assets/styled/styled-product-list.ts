@@ -9,11 +9,15 @@ const boxShadow = "0 0 10px rgba(0, 0, 0, 0.1)";
 export const StyledWrapperProduct = styled.ul`
   padding: 0;
   margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 1rem;
 `;
 
 export const StyledListProduct = styled.li`
-  display: inline-block;
-  margin: 1.2rem;
+  list-style: none;
   width: 40%;
   min-width: 30%;
 `;
