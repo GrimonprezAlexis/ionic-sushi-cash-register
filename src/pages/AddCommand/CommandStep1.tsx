@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   IonBreadcrumb,
@@ -6,13 +6,14 @@ import {
   IonContent,
   IonLabel,
   IonPage,
-  IonSegment,
-  IonSegmentButton,
   IonGrid,
   IonRow,
   IonCol,
   IonIcon,
+  IonCheckbox,
+  IonButton,
   useIonRouter,
+  createAnimation,
 } from "@ionic/react";
 import { setOrderType } from "../../store/actions";
 import { RootState } from "../../store";
@@ -28,27 +29,42 @@ const AddCommandStep1: React.FC = () => {
   const router = useIonRouter();
   const dispatch = useDispatch();
   const orderType = useSelector((state: RootState) => state.command.orderType);
+  const [tempOrderType, setTempOrderType] = useState(orderType?.type || "");
+  const [tempLocation, setTempLocation] = useState(orderType?.location || "");
 
   const handleTypeChange = (type: "surplace" | "aemporter") => {
-    const newOrderType: OrderType = {
-      type,
-      location: type === "aemporter" ? undefined : orderType?.location,
-    };
-    dispatch(setOrderType(newOrderType));
+    setTempOrderType(type);
     if (type === "aemporter") {
-      navigateToCommande2();
+      setTempLocation(undefined);
     }
   };
 
   const handleLocationChange = (location: "INSIDE" | "OUTSIDE") => {
-    if (orderType?.type === "surplace") {
-      dispatch(setOrderType({ ...orderType, location }));
+    if (tempOrderType === "surplace") {
+      setTempLocation(location);
     }
+  };
+
+  const handleSubmit = () => {
+    const newOrderType: OrderType = {
+      type: tempOrderType as "surplace" | "aemporter",
+      location: tempOrderType === "surplace" ? tempLocation : undefined,
+    };
+    dispatch(setOrderType(newOrderType));
     navigateToCommande2();
   };
 
   const navigateToCommande2 = () => {
-    router.push("/command/2");
+    // Animation avant de changer de page
+    const animation = createAnimation()
+      .addElement(document.querySelector("ion-content")!)
+      .duration(500)
+      .easing("ease-out")
+      .fromTo("opacity", "1", "0");
+
+    animation.play().then(() => {
+      router.push("/command/2");
+    });
   };
 
   return (
@@ -69,13 +85,14 @@ const AddCommandStep1: React.FC = () => {
           <IonRow className="ion-margin-top">
             <IonCol>
               <IonLabel>Type de Commande</IonLabel>
-              <IonSegment
-                value={orderType?.type}
-                onIonChange={(e) =>
-                  handleTypeChange(e.detail.value as "surplace" | "aemporter")
-                }
-              >
-                <IonSegmentButton value="surplace">
+              <IonRow className="ion-align-items-center ion-padding-vertical">
+                <IonCol size="auto">
+                  <IonCheckbox
+                    checked={tempOrderType === "surplace"}
+                    onIonChange={() => handleTypeChange("surplace")}
+                  />
+                </IonCol>
+                <IonCol>
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <IonIcon
                       icon={restaurantOutline}
@@ -83,9 +100,17 @@ const AddCommandStep1: React.FC = () => {
                     />
                     <IonLabel>Sur Place</IonLabel>
                   </div>
-                </IonSegmentButton>
+                </IonCol>
+              </IonRow>
 
-                <IonSegmentButton value="aemporter">
+              <IonRow className="ion-align-items-center ion-padding-vertical">
+                <IonCol size="auto">
+                  <IonCheckbox
+                    checked={tempOrderType === "aemporter"}
+                    onIonChange={() => handleTypeChange("aemporter")}
+                  />
+                </IonCol>
+                <IonCol>
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <IonIcon
                       icon={walkOutline}
@@ -93,22 +118,24 @@ const AddCommandStep1: React.FC = () => {
                     />
                     <IonLabel>À Emporter</IonLabel>
                   </div>
-                </IonSegmentButton>
-              </IonSegment>
+                </IonCol>
+              </IonRow>
             </IonCol>
           </IonRow>
 
-          {orderType?.type === "surplace" && (
+          {tempOrderType === "surplace" && (
             <IonRow className="ion-margin-top">
               <IonCol>
                 <IonLabel>Emplacement</IonLabel>
-                <IonSegment
-                  value={orderType?.location}
-                  onIonChange={(e) =>
-                    handleLocationChange(e.detail.value as "INSIDE" | "OUTSIDE")
-                  }
-                >
-                  <IonSegmentButton value="INSIDE">
+
+                <IonRow className="ion-align-items-center ion-padding-vertical">
+                  <IonCol size="auto">
+                    <IonCheckbox
+                      checked={tempLocation === "INSIDE"}
+                      onIonChange={() => handleLocationChange("INSIDE")}
+                    />
+                  </IonCol>
+                  <IonCol>
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <IonIcon
                         icon={homeOutline}
@@ -116,9 +143,17 @@ const AddCommandStep1: React.FC = () => {
                       />
                       <IonLabel>Intérieur</IonLabel>
                     </div>
-                  </IonSegmentButton>
+                  </IonCol>
+                </IonRow>
 
-                  <IonSegmentButton value="OUTSIDE">
+                <IonRow className="ion-align-items-center ion-padding-vertical">
+                  <IonCol size="auto">
+                    <IonCheckbox
+                      checked={tempLocation === "OUTSIDE"}
+                      onIonChange={() => handleLocationChange("OUTSIDE")}
+                    />
+                  </IonCol>
+                  <IonCol>
                     <div style={{ display: "flex", alignItems: "center" }}>
                       <IonIcon
                         icon={sunnyOutline}
@@ -126,11 +161,25 @@ const AddCommandStep1: React.FC = () => {
                       />
                       <IonLabel>Extérieur</IonLabel>
                     </div>
-                  </IonSegmentButton>
-                </IonSegment>
+                  </IonCol>
+                </IonRow>
               </IonCol>
             </IonRow>
           )}
+
+          <IonRow className="ion-margin-top">
+            <IonCol>
+              {/* Bouton de validation */}
+              <IonButton
+                expand="block"
+                onClick={handleSubmit}
+                color="primary"
+                className="ion-padding"
+              >
+                Valider et Continuer
+              </IonButton>
+            </IonCol>
+          </IonRow>
         </IonGrid>
       </IonContent>
     </IonPage>

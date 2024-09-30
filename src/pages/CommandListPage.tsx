@@ -44,7 +44,7 @@ const CommandListPage: React.FC = () => {
   const isMounted = useRef(false);
 
   useEffect(() => {
-    if (!isMounted.current) {
+    if (!isMounted.current || !commandes) {
       isMounted.current = true;
       getAllCommandes();
     }
@@ -116,7 +116,7 @@ const CommandListPage: React.FC = () => {
           <IonRow>
             <IonCol>
               <IonBreadcrumbs>
-                <IonBreadcrumb href="/command/list">
+                <IonBreadcrumb>
                   Liste des commandes{" "}
                   <IonIcon icon={clipboardOutline} slot="start" />
                 </IonBreadcrumb>

@@ -60,11 +60,11 @@ const AddCommandStep2: React.FC = () => {
 
   useEffect(() => {
     if (!orderType) navigateToUrl("/command/1");
-    if (productsData.length === 0 && didFetchData.current.categories) {
+    if (productsData.length === 0 || didFetchData.current.categories) {
       didFetchData.current.categories = false;
       fetchCatalogues();
     }
-    if (categoriesData.length === 0 && didFetchData.current.catalogues) {
+    if (categoriesData.length === 0 || didFetchData.current.catalogues) {
       didFetchData.current.catalogues = false;
       fetchCategories();
     }
