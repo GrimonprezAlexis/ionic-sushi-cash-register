@@ -62,7 +62,7 @@ const BasketAction: React.FC = () => {
     setLoading(false);
 
     console.log("res", res);
-    stateHandler(res);
+    stateHandler(res, detailCommand.idCommande);
   };
 
   const handleNewCommand = async () => {
@@ -86,7 +86,7 @@ const BasketAction: React.FC = () => {
         setLoading(false);
         console.log("res", res);
         setShowToast({ isOpen: true, message: "Commande ajoutée avec succès" });
-        router.push(`/command/list/${res.data.id}`);
+        router.push(`/command/list/${body.idCommande}`);
       },
       (error) => {
         // En cas d'erreur
@@ -96,10 +96,10 @@ const BasketAction: React.FC = () => {
     );
   };
 
-  const stateHandler = (res: any) => {
+  const stateHandler = (res: any, idCommande: string) => {
     if (res?.success) {
       setShowToast({ isOpen: true, message: "Commande ajoutée avec succès" });
-      router.push(`/command/list/${res.data.id}`);
+      router.push(`/command/list/${idCommande}`);
     } else if (res.error) {
       setShowToast({ isOpen: true, message: `Erreur : ${res.error}` });
     } else {

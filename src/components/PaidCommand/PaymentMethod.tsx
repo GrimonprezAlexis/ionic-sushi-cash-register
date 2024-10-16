@@ -23,6 +23,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
   );
 
   const handlePaymentMethod = (paymentMethod: PaymentMethodEnum) => {
+    setPaymentMethod(paymentMethod);
     onPaymentMethodSelect(paymentMethod);
   };
 
@@ -31,12 +32,11 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
       <IonRadioGroup
         class="ion-radio-group-payment-method"
         value={paymentMethod}
-        onIonChange={(e) => handlePaymentMethod(e.detail.value)}
       >
         <IonCol size="5">
           <IonCard
             button
-            onClick={() => setPaymentMethod(PaymentMethodEnum.CASH)}
+            onClick={() => handlePaymentMethod(PaymentMethodEnum.CASH)}
             className={
               paymentMethod === PaymentMethodEnum.CASH ? "selected-method" : ""
             }
@@ -51,7 +51,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
         <IonCol size="5">
           <IonCard
             button
-            onClick={() => setPaymentMethod(PaymentMethodEnum.CB)}
+            onClick={() => handlePaymentMethod(PaymentMethodEnum.CB)}
             className={
               paymentMethod === PaymentMethodEnum.CB ? "selected-method" : ""
             }
@@ -66,7 +66,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
         <IonCol size="5">
           <IonCard
             button
-            onClick={() => setPaymentMethod(PaymentMethodEnum.MOBILE)}
+            onClick={() => handlePaymentMethod(PaymentMethodEnum.MOBILE)}
             className={
               paymentMethod === PaymentMethodEnum.MOBILE
                 ? "selected-method"

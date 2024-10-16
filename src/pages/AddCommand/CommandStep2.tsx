@@ -33,11 +33,14 @@ import {
 } from "../../store/actions";
 import { getCatalogue } from "../../services/catalogueService";
 import { getCategories } from "../../services/categorieService";
+import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 
 const AddCommandStep2: React.FC = () => {
   const dispatch = useDispatch();
   const router = useIonRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null); // Manage error state
+
   const [productsData, setProductsData] = useState<Product[]>([]);
   const [categoriesData, setCategoriesData] = useState<string[]>([]);
 
@@ -95,7 +98,7 @@ const AddCommandStep2: React.FC = () => {
       setLoading(false);
       setProductsData(data.products);
     } catch (error) {
-      console.error("Error fetching catalogue", error);
+      setError("Error fetching catalogue. Please try again."); // Set the error message
       setLoading(false);
     }
   };
@@ -126,6 +129,8 @@ const AddCommandStep2: React.FC = () => {
     router.push(`/command/${step}`);
   };
 
+  const handleCloseError = () => setError(null);
+
   return (
     <IonPage>
       <IonHeader>
@@ -133,6 +138,14 @@ const AddCommandStep2: React.FC = () => {
           <IonTitle>Passer une commande</IonTitle>
         </IonToolbar>
       </IonHeader>
+
+      {error && (
+        <ErrorMessage
+          showError={!!error}
+          errorMessage={error}
+          onClose={handleCloseError}
+        />
+      )}
 
       <IonContent className="ion-padding">
         <IonBreadcrumbs>

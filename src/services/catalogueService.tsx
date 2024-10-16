@@ -6,7 +6,7 @@ const apiUrl = import.meta.env.VITE_REACT_APP_API_URL;
 export const convertXlsToJson = async (formData: FormData) => {
   try {
     const res = await axios.post(
-      `${apiUrl}/v1/catalogues/convert-xls-to-json`,
+      `${apiUrl}/v1/catalogue/convert-xls-to-json`,
       formData,
       {
         headers: {
@@ -24,7 +24,7 @@ export const convertXlsToJson = async (formData: FormData) => {
 export const downloadExempleMenuXls = async () => {
   try {
     const response = await axios({
-      url: `${apiUrl}/v1/catalogues/download-example-xls`,
+      url: `${apiUrl}/v1/catalogue/download-example-xls`,
       method: "GET",
       responseType: "blob",
     });
@@ -44,7 +44,7 @@ export const downloadExempleMenuXls = async () => {
 
 export const getCatalogue = async () => {
   try {
-    const res = await axios.get(`${apiUrl}/v1/catalogue`);
+    const res = await axios.get(`${apiUrl}/v1/catalogues`);
     return res.data;
   } catch (error: any) {
     console.error(error);
@@ -54,7 +54,7 @@ export const getCatalogue = async () => {
 
 export const getCatalogueGrouped = async () => {
   try {
-    const res = await axios.get(`${apiUrl}/v1/catalogue/grouped-category`);
+    const res = await axios.get(`${apiUrl}/v1/catalogues/grouped-category`);
     return res.data;
   } catch (error: any) {
     console.error(error);

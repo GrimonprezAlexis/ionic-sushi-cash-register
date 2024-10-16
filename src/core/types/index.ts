@@ -83,4 +83,6 @@ export interface PaymentDetails {
   products: Product[];
   paymentMethod: PaymentMethodEnum;
   totalPrice: number;
+  amountGiven?: number;
+  amountReturned?: number;
 }

@@ -54,7 +54,14 @@ const CommandListPage: React.FC = () => {
     try {
       setLoading(true);
       const { data } = await getCommandes();
-      const sortedData = data.sort((a: Commande, b: Commande) => {
+
+      // Transform the Firebase object into an array
+      const commandesArray = Object.keys(data).map((key) => ({
+        id: key, // Firebase unique ID
+        ...data[key], // Spread the properties from the data object
+      }));
+
+      const sortedData = commandesArray.sort((a: Commande, b: Commande) => {
         return (
           new Date(b.isoDateCommande).getTime() -
           new Date(a.isoDateCommande).getTime()
