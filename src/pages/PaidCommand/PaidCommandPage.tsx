@@ -248,14 +248,20 @@ const PayCommandPage: React.FC<PayCommandProps> = ({ match }) => {
                   {commande.products.map((product: Product, index: number) => (
                     <IonItem key={index}>
                       <IonCheckbox
+                        disabled={isAlreadyPaidProduct(product.id)}
                         slot="start"
                         onIonChange={(e) =>
                           handleProductSelection(product, e.detail.checked)
                         }
-                        disabled={isAlreadyPaidProduct(product.id)}
                       />
                       <IonLabel>
-                        <h2>
+                        <h2
+                          className={
+                            isAlreadyPaidProduct(product.id)
+                              ? "is-already-paid-product"
+                              : ""
+                          }
+                        >
                           {product.name}{" "}
                           <IonBadge color="light">x{product.quantity}</IonBadge>
                         </h2>
