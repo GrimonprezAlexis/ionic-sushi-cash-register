@@ -155,14 +155,15 @@ const CommandListPage: React.FC = () => {
                 handleCommandTypeChange(e.detail.value as PaymentStatusEnum)
               }
             >
-              <IonSegmentButton value={PaymentStatusEnum.PENDING}>
+              <IonSegmentButton value={PaymentStatusEnum.PARTIALLY_PAID}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <IonIcon
                     icon={hourglassOutline}
                     style={{ marginRight: "8px", color: "#000" }}
                   />
                   <IonLabel>
-                    En attente ({countCommandByType(PaymentStatusEnum.PENDING)})
+                    En attente (
+                    {countCommandByType(PaymentStatusEnum.PARTIALLY_PAID)})
                   </IonLabel>
                 </div>
               </IonSegmentButton>

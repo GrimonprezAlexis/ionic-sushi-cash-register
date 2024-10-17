@@ -37,6 +37,11 @@ const MenuComponent: React.FC = () => {
     }
   };
 
+  const refreshApp = () => {
+    console.log("Refreshing app...");
+    window.location.reload();
+  };
+
   return (
     <IonMenu
       ref={menuRef}
@@ -53,7 +58,7 @@ const MenuComponent: React.FC = () => {
                 alt=""
               />
             </IonAvatar>
-            <IonLabel color="light">
+            <IonLabel color="light" onClick={() => refreshApp()}>
               <h2>Gérant</h2>
               <p>Alexis</p>
             </IonLabel>

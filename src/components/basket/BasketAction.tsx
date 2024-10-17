@@ -54,15 +54,34 @@ const BasketAction: React.FC = () => {
     return Math.round(totalPrice * 100) / 100;
   };
 
+  const shouldUpdateOrder = (
+    currentOrder: Commande,
+    selectedProducts: SelectedProducts[]
+  ) => {
+    if (currentOrder.products.length !== selectedProducts.length) return true;
+
+    return currentOrder.products.some((currentProduct) => {
+      const selectedProduct = selectedProducts.find(
+        (p) => p.id === currentProduct.id
+      );
+      return (
+        !selectedProduct || currentProduct.quantity !== selectedProduct.quantity
+      );
+    });
+  };
+
   const handleCommandExtend = async () => {
     setLoading(true);
-    const res = await extendCommandId(detailCommand.idCommande, {
-      extendProducts: selectedProducts,
-    });
-    setLoading(false);
 
-    console.log("res", res);
-    stateHandler(res, detailCommand.idCommande);
+    if (shouldUpdateOrder(detailCommand, selectedProducts)) {
+      const res = await extendCommandId(detailCommand.idCommande, {
+        extendProducts: selectedProducts,
+      });
+      stateHandler(res, detailCommand.idCommande);
+    }
+    setLoading(false);
+    setShowToast({ isOpen: true, message: "Aucune modification détectée." });
+    router.push(`/command/list/${detailCommand.idCommande}`);
   };
 
   const handleNewCommand = async () => {

@@ -30,6 +30,7 @@ import {
   addCircleOutline,
   removeCircleOutline,
   clipboardOutline,
+  searchCircle,
 } from "ionicons/icons";
 import { useEffect, useRef, useState } from "react";
 import { RouteComponentProps } from "react-router";
@@ -333,6 +334,7 @@ const PayCommandPage: React.FC<PayCommandProps> = ({ match }) => {
                         <IonInput
                           type="number"
                           placeholder="Entrer montant"
+                          onChange={handleFreeInputChange}
                           onIonChange={handleFreeInputChange}
                           value={amountGiven}
                         />
